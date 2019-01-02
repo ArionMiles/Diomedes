@@ -9,7 +9,7 @@ class RegionAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['username', 'city', 'movie_name', 'movie_language', 'movie_dimension',
+    list_display = ['username', 'movie_name', 'city', 'movie_language', 'movie_dimension',
                     'movie_date', 'movie_found', 'task_completed', 'notified']
     search_fields = ['username', 'movie_name']
     list_filter = ['movie_language', 'movie_dimension', 'movie_found', 'task_completed', 'notified']
