@@ -115,6 +115,10 @@ class BMS():
                         return f"https://in.bookmyshow.com/buytickets/{event_url}-{city}/movie-{city}-{event_code}/{date}"
     
     def get_preferred_cinemas(self):
+        """
+        Returns list of dict of popular cinemas.
+        Return just venue_code list?
+        """
         preferred_cinemas = self.session.get(f'{self.BASE_URL}GETPREFERREDCINEMAS')
         popular = preferred_cinemas.json()
         popular_cinemas_list = []
@@ -122,11 +126,19 @@ class BMS():
             popular_cinemas_list.append(cinema)
         return popular_cinemas_list
     
-    def get_showtimes(self, venue_code, event_code):
-        date = datetime.datetime.today().strftime("%Y%m%d")
-        showtimes = self.session.get(f'{self.BASE_URL}GETSHOWTIMESBYEVENTANDVENUE&f=json&dc={date}&vc={venue_code}&ec={event_code}')
-        shows = showtimes.json()['BookMyShow']['arrShows']
-        return shows
+    def get_showtimes(self, event_code, date):
+        """
+        Think over what values need to be returned
+        """
+        venue_codes = self.get_preferred_cinemas()
+        date = datetime.datetime.today().strftime("%Y%m%d") # This is temporary, take date object
+        list_of_shows = []
+        for venue_code in venue_codes:
+            showtimes = self.session.get(f'{self.BASE_URL}GETSHOWTIMESBYEVENTANDVENUE&f=json&dc={date}&vc={venue_code}&ec={event_code}')
+            shows = showtimes.json()['BookMyShow']['arrShows']
+            # Do some formatting
+            # list_of_show.append(shows??)
+        return list_of_shows
 
 def test():
     bms = BMS("MUMBAI", "Mumbai")
