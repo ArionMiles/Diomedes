@@ -32,7 +32,7 @@ class Region(models.Model):
 
 class Task(models.Model):
     username = models.EmailField()
-    city = models.ForeignKey(Region, on_delete=models.CASCADE, to_field='code')
+    city = models.ForeignKey(Region, on_delete=models.CASCADE)
     movie_name = models.CharField(max_length=20)
     movie_language = models.CharField(max_length=20, default='Hindi', choices=Languages.CHOICES)
     movie_dimension = models.CharField(max_length=20, default="2D", choices=Dimensions.CHOICES)
