@@ -21,4 +21,4 @@ def TaskView(request):
         ctx ={
             'form':form,
         }
-        return render(request, "home.html", ctx)
+        return render(request, "add_task.html", ctx)
