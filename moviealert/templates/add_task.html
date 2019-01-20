@@ -1,12 +1,29 @@
-<html>
-<body>
+{% extends "base.html" %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
+{% endblock %}
+
+{% block content %}
     {{ form.errors }}
-<form action="/" method="post">
-    <!--Use DatePicker widget for Date field.
-        Make it so that by default the logged in user's email is entered in email field-->
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
-</body>
-</html>
+    <form action={% url 'task_view' %} method="post">
+        <!--Use DatePicker widget for Date field.
+            Make it so that by default the logged in user's email is entered in email field-->
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="js/jquery.min.js"></script>
+    <script src="js/kendo.all.min.js"></script>
+
+    <script>
+        $(document).onload(function () {
+            $("#id_movie_date").kendoDatePicker();
+        });
+    </script>
+{% endblock %}

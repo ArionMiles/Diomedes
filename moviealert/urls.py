@@ -1,7 +1,9 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
-from .views import TaskView
+from .views import home_view, task_view
 
 urlpatterns = [
-    url(r'^$', TaskView, name='home')
+    url(r'^$', home_view, name='home'),
+    url(r'^accounts/', include('allauth.urls')),
+    url(r'^add-movies/$', task_view, name='task_view'),
 ]
