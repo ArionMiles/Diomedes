@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="eng" class="no-js">
+<head>
+  <title>
+    {% block title %}
+      Diomedes
+    {% endblock %}
+  </title>
+
+  {% block meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#21915a"/>
+    <meta name="robots" content="noindex, nofollow">
+  {% endblock meta %}
+
+
+  <link rel="stylesheet" href="{% static 'bootstrap4/css/bootstrap.min.css' %}">
+
+  {% block custom_head %}{% endblock %}
+  {% block custom_css %}{% endblock %}
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'home' %}">Diomedes</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExample04">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown04" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">Dropdown</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown04">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-md-0">
+      <input class="form-control" placeholder="Search" type="text">
+    </form>
+  </div>
+</nav>
+
+{% if messages %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <br>
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissable">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div>
+{% block content %}{% endblock %}
+</div>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'bootstrap4/js/bootstrap.bundle.min.js' %}"></script>
+
+{% block custom_js %}{% endblock %}
+</body>
+</html>
