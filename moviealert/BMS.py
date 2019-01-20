@@ -3,6 +3,8 @@ import datetime
 from urllib.parse import quote
 import requests
 
+from .exceptions import BMSError
+
 class BMS():
     """
     BMS Class with all basic functions
@@ -114,7 +116,6 @@ class BMS():
         for venue_code in venue_codes:
             showtimes = self.session.get(f'{self.BASE_URL}GETSHOWTIMESBYEVENTANDVENUE&f=json&dc={date}&vc={venue_code}&ec={event_code}')
             shows = showtimes.json()['BookMyShow']['arrShows']
-            # Do some formatting maybe?
             list_of_shows.append(shows)
         return list_of_shows
 
@@ -129,6 +130,3 @@ class BMS():
         region_list = response.text.split("=", 1)[1]
         region_list = region_list.split(";", 1)[0]
         return json.loads(region_list)
-
-class BMSError(Exception):
-    pass

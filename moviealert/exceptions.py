@@ -1,0 +1,2 @@
+class BMSError(Exception):
+    pass
