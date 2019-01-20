@@ -61,7 +61,7 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'django-rq',
+    'django_rq',
 ]
 
 LOCAL_APPS = [
@@ -173,3 +173,11 @@ RQ_QUEUES = {
         'DEFAULT_TIMEOUT': 500,
     }
 }
+
+SOCIALACCOUNT_PROVIDERS = { 'google': 
+                             { 'SCOPE': ['email'],
+                               'AUTH_PARAMS': { 'access_type': 'online' }
+                             }
+                          }
+
+ACCOUNT_USERNAME_REQUIRED = False
