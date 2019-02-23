@@ -62,6 +62,9 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'django_rq',
+    'anymail',
+    'templated_mail',
+    'django_extensions',
 ]
 
 LOCAL_APPS = [
@@ -181,3 +184,12 @@ SOCIALACCOUNT_PROVIDERS = { 'google':
                           }
 
 ACCOUNT_USERNAME_REQUIRED = False
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ['MAILGUN_API_KEY'],
+    "MAILGUN_SENDER_DOMAIN": os.environ['MAILGUN_DOMAIN'],
+}
+
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+DEFAULT_FROM_EMAIL = "Diomedes <diomedes@getadomain.com>"
+DEFAULT_REPLY_TO = "Diomedes <diomedes@getadomain.com>"

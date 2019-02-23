@@ -30,7 +30,7 @@ class BMS():
         response = self.session.get(f'{self.BASE_URL}QUICKBOOK&type={event_type}')
         return response.json()
 
-    def get_movie_url(self, key, language, dimension="2D", event_type="MT"):
+    def get_movie_url(self, key, language, date, dimension="2D", event_type="MT"):
         """Returns movie url
 
         :param str key: Movie name
@@ -48,6 +48,7 @@ class BMS():
         """
         quickbook = self.quickbook(event_type)
         city = self.region_name.replace(" ", "-")
+        date = date.strftime("%Y%m%d")
         movies = quickbook['moviesData']['BookMyShow']['arrEvents']
         for movie in movies:
             if key == movie['EventTitle']:
@@ -55,8 +56,6 @@ class BMS():
                     if language == child['EventLanguage'] and dimension == child['EventDimension']:
                         event_url = child['EventURL']
                         event_code = child['EventCode']
-                        today = datetime.date.today()
-                        date = today.strftime("%Y%m%d")
                         return f"https://in.bookmyshow.com/buytickets/{event_url}-{city}/movie-{city}-{event_code}/{date}"
         else:
             raise BMSError("Movie not found! Please check the Movie name and other options")
@@ -114,8 +113,11 @@ class BMS():
         date = date.strftime("%Y%m%d")
         list_of_shows = []
         for venue_code in venue_codes:
-            showtimes = self.session.get(f'{self.BASE_URL}GETSHOWTIMESBYEVENTANDVENUE&f=json&dc={date}&vc={venue_code}&ec={event_code}')
-            shows = showtimes.json()['BookMyShow']['arrShows']
+            shows = {}
+            showtimes = self.session.get(f'{self.BASE_URL}GETSHOWTIMESBYEVENTANDVENUE&f=json&dc={date}&vc={venue_code}&ec={event_code}').json()
+            shows['shows'] = showtimes['BookMyShow']['arrShows']
+            shows['venue_code'] = showtimes['BookMyShow']['arrVenue'][0]['VenueCode']
+            shows['venue_name'] = showtimes['BookMyShow']['arrVenue'][0]['VenueName']
             list_of_shows.append(shows)
         return list_of_shows
 

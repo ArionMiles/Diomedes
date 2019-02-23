@@ -1,5 +1,9 @@
 # TODO: FIND A WAY TO TAKE EVENT URLS, ALONG WITH LANGUAGE/DIMENSION AND CREATE TASKS
 import datetime
+
+from django.conf import settings
+from templated_mail.mail import BaseEmailMessage
+
 from .BMS import BMS
 from .models import Region, SubRegion, Cinemas, Task
 from .exceptions import BMSError
@@ -33,18 +37,6 @@ def save_venue_code():
             new_cinema.save()
 
 
-def test_get_url():
-    bms = BMS("MUMBAI", "Mumbai")
-    return bms.get_movie_url("Simmba", "Hindi")
-
-
-def test_get_showtimes():
-    bms = BMS("MUMBAI", "Mumbai")
-    date = datetime.date(2019, 1, 20)
-    shows = bms.get_showtimes("URI - The Surgical Strike", "Hindi", date)
-    return shows
-
-
 def find_movies(task):
     region_code = task.city.code
     region_name = task.city.name
@@ -52,17 +44,45 @@ def find_movies(task):
     language = task.movie_language
     dimension = task.movie_dimension
     date = task.movie_date
+    formatted_date = date.strftime("%a, %B %d %Y")
 
     bms = BMS(region_code, region_name)
+    
     try:
-        shows = bms.get_showtimes(key, language, date, dimension)
-        movie_url = bms.get_movie_url(key, language, dimension)
+        showtimes = bms.get_showtimes(key, language, date, dimension)
+        movie_url = bms.get_movie_url(key, language, date, dimension)
+        shows = format_shows_list(showtimes)
+
+        email = BaseEmailMessage(
+                template_name='email.html',
+                context={
+                        'task': task,
+                        'formatted_date': formatted_date,
+                        'shows': shows,
+                        'movie_url': movie_url,
+                        },
+        )
+
+        email.send(
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[task.username],
+                reply_to=[settings.DEFAULT_REPLY_TO],
+        )
+
+        task.movie_found = True
+        task.task_completed = True
+        task.notified = True
+        task.save()
     except BMSError as e:
+        task.search_count += 1
+        if task.search_count > 5:
+            task.dropped = True
+        task.save()
         print(e)
 
 
 def find_movies_job():
-    unfinished_tasks = Task.objects.filter(task_completed=False)
+    unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, search_count__lte=5)
     for task in unfinished_tasks:
         find_movies(task)
     
@@ -70,16 +90,12 @@ def find_movies_job():
 def format_shows_list(shows):
     formatted_shows = []
     for show in shows:
-        for i_show in show:
-            show_dict = {}
-            show_dict['session_id'] = i_show['SessionId']
-            show_dict['time'] = i_show['ShowTimeDisplay']
-            categories = i_show['Categories']
-            show_dict['cat'] = {}
-            for category in categories:
-                show_dict['cat']['category_name'] = category['PriceDesc']
-                show_dict['cat']['price'] = "Rs.{}".format(category['CurPrice'])
-            formatted_shows.append(show_dict)
+        show_dict = {"venue" : {"name": None, "showtimes": [] }}
+        show_dict['venue']['name'] = show['venue_name']
+        for i_show in show['shows']:            
+            showtime_url = get_showtime_url(i_show['SessionId'], show['venue_code'])
+            show_dict['venue']['showtimes'].append({'showtime_url': showtime_url, 'time': i_show['ShowTimeDisplay']})
+        formatted_shows.append(show_dict)
     return formatted_shows
 
 
