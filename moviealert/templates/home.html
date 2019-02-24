@@ -1,4 +1,18 @@
-<html>
-    <h1>Diomedes</h1>
-    <h4><a href={% url 'task_view' %}>Add a Movie</a></h4>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+          <h1>Welcome to Diomedes!</h1>
+        </div>
+        {% if not user.is_authenticated %}
+        <div class="container">
+            <h2><a href={% url 'account_login' %}>Login</a></h2>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

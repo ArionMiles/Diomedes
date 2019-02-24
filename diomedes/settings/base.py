@@ -65,6 +65,7 @@ THIRD_PARTY_APPS = [
     'anymail',
     'templated_mail',
     'django_extensions',
+    'crispy_forms',
 ]
 
 LOCAL_APPS = [
@@ -88,7 +89,7 @@ ROOT_URLCONF = 'diomedes.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ROOT_DIR('templates')],
+        'DIRS': [APPS_DIR('templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -152,6 +153,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = env.str('DJANGO_STATIC_ROOT', default=ROOT_DIR('serve_staticfiles'))
+STATICFILES_DIRS = (
+    str(ROOT_DIR.path('static')),
+)
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -184,6 +189,7 @@ SOCIALACCOUNT_PROVIDERS = { 'google':
                           }
 
 ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGOUT_ON_GET = True
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.environ['MAILGUN_API_KEY'],
@@ -193,3 +199,5 @@ ANYMAIL = {
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 DEFAULT_FROM_EMAIL = "Diomedes <diomedes@getadomain.com>"
 DEFAULT_REPLY_TO = "Diomedes <diomedes@getadomain.com>"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
