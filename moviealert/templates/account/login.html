@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% load socialaccount %}
+
+{% block content %}
+<!-- <meta name="google-signin-client_id" content="530535804054-hnesskhifon61nf3gafrjlijukei18l3.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script> -->
+
+<style>
+.google-logo {
+  height: 1em;
+}
+
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <h1 align="center">Log In</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center p-2">
+                <a href={% provider_login_url "google" next="/add-movies/" %} class="btn btn-light shadow-sm d-inline-flex align-items-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/600px-Google_%22G%22_Logo.svg.png" class="google-logo mr-2">
+                    Sign in with Google
+                </a>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <form action={% url 'account_login' %} method="post">
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="invalid-feedback d-block">
+                                <strong>{{ error|escape }}</strong>
+                            </p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p class="invalid-feedback d-block">
+                            <strong>{{ error|escape }}</strong>
+                        </p>
+                    {% endfor %}
+                {% endif %}
+
+                {% csrf_token %}
+                {{ form.login|as_crispy_field }}
+                {{ form.password|as_crispy_field }}
+                <div class="d-flex">
+                    <div>{{ form.remember|as_crispy_field}}</div>
+                    <a href={% url 'account_reset_password' %} class="ml-auto">Forgot Password?</a>
+                </div>
+
+                <button class="btn btn-primary btn-block" type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
