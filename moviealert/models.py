@@ -37,11 +37,12 @@ class Task(models.Model):
     movie_language = models.CharField(max_length=20, default='Hindi', choices=Languages.CHOICES)
     movie_dimension = models.CharField(max_length=20, default="2D", choices=Dimensions.CHOICES)
     movie_date = models.DateField()
-    movie_found = models.BooleanField(default=False)
     task_completed = models.BooleanField(default=False)
-    notified = models.BooleanField(default=False)
     search_count = models.IntegerField(default=0)
     dropped = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "<{} ({}) ({}) | {} >".format(self.movie_name, self.movie_language, self.movie_dimension, self.movie_date)
 
 class SubRegion(models.Model):
     region_code = models.ForeignKey(Region, on_delete=models.CASCADE, to_field='code')

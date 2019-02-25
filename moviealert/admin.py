@@ -10,16 +10,15 @@ class RegionAdmin(admin.ModelAdmin):
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ['username', 'movie_name', 'city', 'movie_language', 'movie_dimension',
-                    'movie_date', 'movie_found', 'task_completed', 'notified']
+                    'movie_date', 'task_completed', 'search_count', 'dropped']
     search_fields = ['username', 'movie_name']
-    list_filter = ['movie_language', 'movie_dimension', 'movie_found', 'task_completed', 'notified']
+    list_filter = ['movie_language', 'movie_dimension', 'task_completed', 'dropped']
     autocomplete_fields = ['city']
 
 @admin.register(SubRegion)
 class SubRegionAdmin(admin.ModelAdmin):
     list_display = ['region_code', 'sub_region_code', 'sub_region_name']
     search_fields = ['sub_region_name']
-    # list_filter = ['region_code']
 
 @admin.register(Cinemas)
 class CinemasAdmin(admin.ModelAdmin):
