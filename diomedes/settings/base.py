@@ -201,3 +201,40 @@ DEFAULT_FROM_EMAIL = "Diomedes <diomedes@getadomain.com>"
 DEFAULT_REPLY_TO = "Diomedes <diomedes@getadomain.com>"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False, # keep Django's default loggers
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(module)s %(message)s'
+        },
+    },
+    'handlers': {
+        'logfile': {
+            'level': 'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR('djangoproject.log'),
+            'maxBytes': 50 * 10**6, # will 50 MB do?
+            'backupCount': 3,
+            'formatter': 'simple'
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logfile', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # root configuration – for all of our own apps
+        '': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+    },
+}

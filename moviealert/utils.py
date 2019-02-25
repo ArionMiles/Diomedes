@@ -1,5 +1,6 @@
 # TODO: FIND A WAY TO TAKE EVENT URLS, ALONG WITH LANGUAGE/DIMENSION AND CREATE TASKS
 import datetime
+import logging
 
 from django.conf import settings
 from templated_mail.mail import BaseEmailMessage
@@ -7,6 +8,8 @@ from templated_mail.mail import BaseEmailMessage
 from .BMS import BMS
 from .models import Region, SubRegion, Cinemas, Task
 from .exceptions import BMSError
+
+logger = logging.getLogger(__name__)
 
 def save_region_data():
     region_list = BMS.get_region_list()
@@ -69,20 +72,22 @@ def find_movies(task):
                 reply_to=[settings.DEFAULT_REPLY_TO],
         )
 
-        task.movie_found = True
         task.task_completed = True
-        task.notified = True
         task.save()
+        logger.info("Hit on {}".format(str(task)))
     except BMSError as e:
         task.search_count += 1
         if task.search_count > 5:
             task.dropped = True
+            logger.info("Dropping {}. Reason: {}".format(str(task), e))
+        else:
+            logger.info("Miss on {}. Reason: {}".format(str(task), e))
         task.save()
-        print(e)
 
 
 def find_movies_job():
     unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, search_count__lte=5)
+    logger.info("Running job for {} movies.".format(len(unfinished_tasks)))
     for task in unfinished_tasks:
         find_movies(task)
     
