@@ -7,8 +7,6 @@
 {% load socialaccount %}
 
 {% block content %}
-<!-- <meta name="google-signin-client_id" content="530535804054-hnesskhifon61nf3gafrjlijukei18l3.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script> -->
 
 <style>
 .google-logo {
@@ -24,10 +22,10 @@
         </div>
     </div>
     <div class="row justify-content-center p-2">
-                <a href={% provider_login_url "google" next="/add-movies/" %} class="btn btn-light shadow-sm d-inline-flex align-items-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/600px-Google_%22G%22_Logo.svg.png" class="google-logo mr-2">
-                    Sign in with Google
-                </a>
+        <a href={% provider_login_url "google" next="/add-movies/" %} class="btn btn-light shadow-sm d-inline-flex align-items-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/600px-Google_%22G%22_Logo.svg.png" class="google-logo mr-2">
+                Sign in with Google
+        </a>
     </div>
     <div class="row justify-content-center">
         <div class="col-sm-6">
