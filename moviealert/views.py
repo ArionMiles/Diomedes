@@ -29,3 +29,7 @@ def task_view(request):
             'form':form,
         }
         return render(request, "add_task.html", ctx)
+
+
+def about_view(request):
+    return render(request, "about.html")

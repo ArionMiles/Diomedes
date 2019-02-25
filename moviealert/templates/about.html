@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-sm-12">
+            <h1 class="display-4">About</h1>
+        </div>
+        <div class="col-sm-12">
+            <p class="lead">This project is inspired from <a href="https://github.com/iAmMrinal0/django_moviealert"
+                    target="_blank">django_moviealert</a></p>
+            <p class="lead">I couldn't get the original project to run as well as it had some issues and limitations,
+                such as the author forgetting to commit an important script for populating the regions into version
+                control, and losing the
+                script. It also used HTML scraping, and the markup of BookMyShow (BMS) has changed since the original
+                project was last
+                updated. This project uses a different technique to search the movies, and can do much more, including
+                Sports, Plays, and
+                other events (though the project is currently purposely limited to Movies).
+            </p>
+            <p class="lead">But I liked the idea, and given that BMS still doesn't support alerts for when movie tickets
+                are
+                available, I took it upon myself to improve on the work of the original author.
+            </p>
+            <p class="lead">
+                The source code for this project is available on <a href="https://github.com/ArionMiles/Diomedes"
+                    target="_blank">GitHub</a>.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
