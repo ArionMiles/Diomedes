@@ -4,6 +4,7 @@ import logging
 
 from django.conf import settings
 from templated_mail.mail import BaseEmailMessage
+from constance import config
 
 from .BMS import BMS
 from .models import Region, SubRegion, Cinemas, Task
@@ -77,7 +78,7 @@ def find_movies(task):
         logger.info("Hit on {}".format(str(task)))
     except BMSError as e:
         task.search_count += 1
-        if task.search_count > 5:
+        if task.search_count > config.SEARCH_COUNT_LIMIT:
             task.dropped = True
             logger.info("Dropping {}. Reason: {}".format(str(task), e))
         else:
@@ -86,7 +87,8 @@ def find_movies(task):
 
 
 def find_movies_job():
-    unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, search_count__lte=5)
+    print("Queued.... KANISHK")
+    unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, search_count__lte=config.SEARCH_COUNT_LIMIT)
     logger.info("Running job for {} movies.".format(len(unfinished_tasks)))
     for task in unfinished_tasks:
         find_movies(task)

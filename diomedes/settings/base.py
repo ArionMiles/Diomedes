@@ -66,6 +66,7 @@ THIRD_PARTY_APPS = [
     'templated_mail',
     'django_extensions',
     'crispy_forms',
+    'constance',
 ]
 
 LOCAL_APPS = [
@@ -237,4 +238,10 @@ LOGGING = {
             'level': 'DEBUG',
         },
     },
+}
+
+LOGIN_REDIRECT_URL = 'task_view'
+
+CONSTANCE_CONFIG = {
+    'SEARCH_COUNT_LIMIT': (100, 'The number of days a movie should be searched for.', int),
 }
