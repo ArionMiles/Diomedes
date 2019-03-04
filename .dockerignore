@@ -1,0 +1,11 @@
+README.md
+LICENSE
+.vscode
+.git
+__pycache__
+venv
+venv-windows
+.ipynb_checkpoints
+Untitled.ipynb
+db.sqlite3
+djangoproject.log

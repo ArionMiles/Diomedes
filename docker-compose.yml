@@ -1,0 +1,61 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:mainline
+    volumes:
+      - $PWD/conf.d:/etc/nginx/conf.d
+      - .:/app
+      - ./static:/app/static
+    ports:
+      - "80:80"
+    depends_on:
+      - dioapp
+    links:
+      - "dioapp:dioapp"
+
+  dioredis:
+    image: redis:3-alpine
+    ports:
+      - "6379:6379"
+
+  dioapp:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: diomedes
+    container_name: diomedes_web
+    links:
+      - "dioredis:dioredis"
+    depends_on:
+      - dioredis
+      - dioscheduler
+      - dioworker
+    volumes:
+      - .:/app
+      - ./static:/app/static
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+
+  dioscheduler:
+    image: diomedes
+    container_name: diomedes_rqscheduler
+    command: python3 manage.py jobs
+    volumes:
+      - .:/app
+    depends_on:
+      - dioredis
+    links:
+     - "dioredis:dioredis"
+
+  dioworker:
+    image: diomedes
+    container_name: diomedes_rqworker
+    command: python3 manage.py rqworker
+    volumes:
+      - .:/app
+    depends_on:
+      - dioredis
+    links:
+    - "dioredis:dioredis"
