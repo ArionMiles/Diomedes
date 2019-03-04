@@ -27,9 +27,11 @@
                 the date you wish to book tickets
                 for we'll send you an email as soon as the tickets for that date are available!
             </p>
+            {% if not user.is_authenticated %}
             <p class="lead">
                 Start by <a href={% url 'account_login' %}>logging in</a>.
             </p>
+            {% endif %}
         </div>
     </div>
 </div>
