@@ -41,7 +41,7 @@ if READ_DOT_ENV_FILE:
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

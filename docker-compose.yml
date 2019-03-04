@@ -2,6 +2,7 @@ version: "3"
 services:
   nginx:
     image: nginx:mainline
+    container_name: diomedes_nginx
     volumes:
       - $PWD/conf.d:/etc/nginx/conf.d
       - .:/app
