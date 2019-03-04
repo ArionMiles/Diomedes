@@ -20,4 +20,5 @@ from django.conf.urls import url, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('moviealert.urls')),
+    path('django-rq/', include('django_rq.urls')),
 ]
