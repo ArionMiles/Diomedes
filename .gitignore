@@ -108,3 +108,7 @@ venv.bak/
 venv-windows/
 
 testing\.py
+
+ansible/
+
+static/
