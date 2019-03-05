@@ -43,20 +43,3 @@ class Task(models.Model):
 
     def __str__(self):
         return "<{} ({}) ({}) | {} >".format(self.movie_name, self.movie_language, self.movie_dimension, self.movie_date)
-
-class SubRegion(models.Model):
-    region_code = models.ForeignKey(Region, on_delete=models.CASCADE, to_field='code')
-    sub_region_code = models.CharField(max_length=25, null=True, blank=True)
-    sub_region_name = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return self.sub_region_name
-
-class Cinemas(models.Model):
-    venue_code = models.CharField(max_length=20, null= True, blank=True)
-    venue_name = models.CharField(max_length=255, null= True, blank=True)
-    venue_sub_region_code = models.CharField(max_length=20, null= True, blank=True)
-    venue_sub_region_name = models.CharField(max_length=255, null= True, blank=True)
-
-    def __str__(self):
-        return self.venue_code

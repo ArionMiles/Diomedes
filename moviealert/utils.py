@@ -23,24 +23,6 @@ def save_region_data():
         new_region.save()
 
 
-def save_venue_code():
-    region_codes = Region.objects.all()
-    for region in region_codes:
-        bms = BMS(region.code, region.name)
-        quickbook_resp = bms.quickbook("MT")
-        print(region.code, " | ", region.name)
-        cinemas = quickbook_resp['cinemas']['BookMyShow']['aiVN']
-        for cinema in cinemas:
-            venue_code = cinema['VenueCode']
-            venue_name = cinema['VenueName']
-            venue_sub_region_code = cinema['VenueSubRegionCode']
-            venue_sub_region_name = cinema['VenueSubRegionName']
-
-            new_cinema, created = Cinemas.objects.get_or_create(venue_code=venue_code, venue_name=venue_name,
-                                        venue_sub_region_code=venue_sub_region_code, venue_sub_region_name=venue_sub_region_name)
-            new_cinema.save()
-
-
 def find_movies(task):
     region_code = task.city.code
     region_name = task.city.name
@@ -87,7 +69,6 @@ def find_movies(task):
 
 
 def find_movies_job():
-    print("Queued.... KANISHK")
     unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, search_count__lte=config.SEARCH_COUNT_LIMIT)
     logger.info("Running job for {} movies.".format(len(unfinished_tasks)))
     for task in unfinished_tasks:
