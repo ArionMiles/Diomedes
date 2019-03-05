@@ -115,11 +115,16 @@ class BMS():
         for venue_code in venue_codes:
             shows = {}
             showtimes = self.session.get(f'{self.BASE_URL}GETSHOWTIMESBYEVENTANDVENUE&f=json&dc={date}&vc={venue_code}&ec={event_code}').json()
-            shows['shows'] = showtimes['BookMyShow']['arrShows']
-            shows['venue_code'] = showtimes['BookMyShow']['arrVenue'][0]['VenueCode']
-            shows['venue_name'] = showtimes['BookMyShow']['arrVenue'][0]['VenueName']
-            list_of_shows.append(shows)
-        return list_of_shows
+            if len(showtimes['BookMyShow']['arrShows']) > 0:
+                shows['shows'] = showtimes['BookMyShow']['arrShows']
+                shows['venue_code'] = showtimes['BookMyShow']['arrVenue'][0]['VenueCode']
+                shows['venue_name'] = showtimes['BookMyShow']['arrVenue'][0]['VenueName']
+                list_of_shows.append(shows)
+        
+        if len(list_of_shows) > 0:
+            return list_of_shows
+        else:
+            raise BMSError("No Shows found for {} on {}".format(key, date))
 
     @staticmethod
     def get_region_list():
