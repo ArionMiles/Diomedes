@@ -184,8 +184,8 @@ ANYMAIL = {
 }
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-DEFAULT_FROM_EMAIL = "Diomedes <diomedes@getadomain.com>"
-DEFAULT_REPLY_TO = "Diomedes <diomedes@getadomain.com>"
+DEFAULT_FROM_EMAIL = "Diomedes <diomedes@diomedes.in>"
+DEFAULT_REPLY_TO = "Diomedes <diomedes@diomedes.in>"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
