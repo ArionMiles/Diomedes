@@ -56,9 +56,18 @@ Start the container by running:
 
 `docker-compose up`
 
-Run the container in detached mode using:
+Run the container in detached mode (recommended) using:
 
 `docker-compose up -d`
+
+Finally, populate the `Region` model by running:
+
+`docker exec -it diomedes_web python3 manage.py shell`
+
+```
+>>> from moviealert.utils import save_region_data
+>>> save_region_data()
+```
 
 # License
 [MIT License](LICENSE)
