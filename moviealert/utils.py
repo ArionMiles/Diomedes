@@ -7,7 +7,7 @@ from templated_mail.mail import BaseEmailMessage
 from constance import config
 
 from .BMS import BMS
-from .models import Region, SubRegion, Cinemas, Task
+from .models import Region, Task
 from .exceptions import BMSError
 
 logger = logging.getLogger(__name__)
