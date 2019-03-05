@@ -167,7 +167,8 @@ SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = { 'google': 
                              { 'SCOPE': ['email'],
-                               'AUTH_PARAMS': { 'access_type': 'online' }
+                               'AUTH_PARAMS': { 'access_type': 'online',},
+                               'VERIFIED_EMAIL':True,
                              }
                           }
 
