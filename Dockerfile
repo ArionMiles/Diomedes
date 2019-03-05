@@ -12,12 +12,9 @@ WORKDIR /app
 # Cached Layer of Docker, avooid reinstalling packages unless
 # requirements.txt has changed since the last build
 RUN pip install -r requirements.txt
-COPY . /app
 
 # Define environment variable
 ENV DJANGO_READ_DOT_ENV_FILE on
 
-
 # Run django server when the container launches
 CMD python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn -w 4 -b 0.0.0.0:8000 diomedes.wsgi
-# CMD python3 manage.py runserver 0.0.0.0:8000

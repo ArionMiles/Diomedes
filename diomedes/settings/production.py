@@ -12,4 +12,4 @@ RQ_QUEUES = {
     }
 }
 
-CONSTANCE_REDIS_CONNECTION = 'redis://dioredis:6379/0'
+CONSTANCE_REDIS_CONNECTION = '{}/0'.format(os.getenv('REDISTOGO_URL'))
