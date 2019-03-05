@@ -7,6 +7,7 @@ services:
       - $PWD/conf.d:/etc/nginx/conf.d
       - .:/app
       - ./static:/app/static
+      - "/etc/localtime:/etc/localtime:ro"
     ports:
       - "80:80"
     depends_on:
@@ -18,6 +19,8 @@ services:
     image: redis:3-alpine
     ports:
       - "6379:6379"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
 
   dioapp:
     build:
@@ -34,6 +37,7 @@ services:
     volumes:
       - .:/app
       - ./static:/app/static
+      - "/etc/localtime:/etc/localtime:ro"
     env_file:
       - ./.env
     ports:
@@ -45,6 +49,7 @@ services:
     command: python3 manage.py jobs
     volumes:
       - .:/app
+      - "/etc/localtime:/etc/localtime:ro"
     depends_on:
       - dioredis
     links:
@@ -56,6 +61,7 @@ services:
     command: python3 manage.py rqworker
     volumes:
       - .:/app
+      - "/etc/localtime:/etc/localtime:ro"
     depends_on:
       - dioredis
     links:
