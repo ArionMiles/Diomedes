@@ -29,11 +29,13 @@ To run locally, without docker you'll need to
 
 Activate your virtual environment (if you use them), and run:
 
-2. Run Migrations: `python3 manage.py migrate`
+2. Install dependencies: `pip3 install -r requirements.txt`
 
-3. Create admin account: `python3 manage.py createsuperuser`
+3. Run Migrations: `python3 manage.py migrate`
 
-4. Populate the `Region` model:
+4. Create admin account: `python3 manage.py createsuperuser`
+
+5. Populate the `Region` model:
     
     Run `python3 manage.py shell`
     ```
@@ -41,7 +43,7 @@ Activate your virtual environment (if you use them), and run:
     >>> save_region_data()
     ```
 
-5. Star development server: `python3 manage.py runserver`
+6. Star development server: `python3 manage.py runserver`
 
     or gunicorn: `gunicorn -b 0.0.0.0:8000 diomedes.wsgi`
 
