@@ -4,7 +4,9 @@ Inspired by [django_moviealert](https://github.com/iAmMrinal0/django_moviealert)
 
 Sends email alerts for movie tickets as soon as they become available.
 
-I couldn't get the original project to run as well as it had some issues and limitations, such as the author forgetting to commit an important script for populating the regions into version control, and losing the script. It also used HTML scraping, and the markup of BookMyShow (BMS) has changed since the original project was last updated. This project uses a different technique to search the movies, and can do much more, including Sports, Plays, and other events (though the project is currently purposely limited to Movies).
+I had trouble getting the original project to run as it was missing an important script for populating the Regions database model, without which it's impossible to run the project. It also used HTML scraping, and the markup of BookMyShow (BMS) has changed since the original project was last updated. It also wasn't production ready (used Django development server).
+
+This project uses a different technique to search the movies, and can do much more, including Sports, Plays, and other events (though the project is currently purposely limited to Movies). This project is easily deployable via Docker. The website is also mobile friendly.
 
 # Components
 - Django
