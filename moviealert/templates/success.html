@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row m-md-5">
+        <div class="col-sm-12">
+            <p class="lead"><strong>{{ obj.movie_name }}</strong> has been successfully added. When tickets for date <strong>{{ obj.movie_date }}</strong> become available,
+                we will send you an e-mail.
+            </p>
+            <p class="lead">
+                You may go back to the <a href={% url 'home' %}>home page</a> or <a href={% url 'task_view' %}>add another movie</a>.
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

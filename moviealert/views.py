@@ -18,10 +18,11 @@ def task_view(request):
             print(request.user.get_email_field_name)
             if form.is_valid():
                 obj = form.save(commit=False)
+                obj.movie_name = form.cleaned_data['movie_name'].title()
+                print(obj.movie_name)
                 obj.username = request.user.email
                 obj.save()
-                # Redirect to success page maybe?
-                return redirect('home')
+                return render(request, "success.html", {'obj':obj})
             #messages.error(request, 'Something went wrong')
             return render(request, "add_task.html", {'form':form})
     else:
