@@ -20,7 +20,7 @@ def task_view(request):
                 obj = form.save(commit=False)
                 obj.movie_name = form.cleaned_data['movie_name'].title()
                 print(obj.movie_name)
-                obj.username = request.user.email
+                obj.user = request.user
                 obj.save()
                 return render(request, "success.html", {'obj':obj})
             #messages.error(request, 'Something went wrong')

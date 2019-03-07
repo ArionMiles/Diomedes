@@ -51,7 +51,7 @@ def find_movies(task):
 
         email.send(
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[task.username],
+                to=[task.user.email],
                 reply_to=[settings.DEFAULT_REPLY_TO],
         )
 

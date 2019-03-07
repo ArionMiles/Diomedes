@@ -9,8 +9,8 @@ class RegionAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['username', 'movie_name', 'city', 'movie_language', 'movie_dimension',
+    list_display = ['user', 'movie_name', 'city', 'movie_language', 'movie_dimension',
                     'movie_date', 'task_completed', 'search_count', 'dropped']
-    search_fields = ['username', 'movie_name']
+    search_fields = ['user', 'movie_name']
     list_filter = ['movie_language', 'movie_dimension', 'task_completed', 'dropped']
     autocomplete_fields = ['city']
