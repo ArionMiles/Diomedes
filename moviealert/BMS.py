@@ -1,7 +1,9 @@
 import json
 import datetime
 from urllib.parse import quote
+
 import requests
+from jellyfish import metaphone
 
 from .exceptions import BMSError
 
@@ -37,7 +39,7 @@ class BMS():
         :param str language: Movie language
         :param dimension: Movie dimension, can be 2D, 2D 4DX, 3D, 3D 4DX, or IMAX 3D
         :type dimension: str
-        :param event_type: Event types( MT(Movies), CT(Events), PL(Plays), SP(Sports))
+        :param event_type: Event types (MT(Movies), CT(Events), PL(Plays), SP(Sports))
         :type event_type: str
         :return: Movie URL
         :rtype: str
@@ -50,8 +52,9 @@ class BMS():
         city = self.region_name.replace(" ", "-")
         date = date.strftime("%Y%m%d")
         movies = quickbook['moviesData']['BookMyShow']['arrEvents']
+        key = metaphone(key).replace(' ', '')
         for movie in movies:
-            if key == movie['EventTitle']:
+            if key == metaphone(movie['EventTitle']).replace(' ', ''):
                 for child in movie['ChildEvents']:
                     if language == child['EventLanguage'] and dimension == child['EventDimension']:
                         event_url = child['EventURL']
@@ -75,8 +78,9 @@ class BMS():
         """
         quickbook = self.quickbook(event_type)
         movies = quickbook['moviesData']['BookMyShow']['arrEvents']
+        key = metaphone(key).replace(' ', '')
         for movie in movies:
-            if key == movie['EventTitle']:
+            if key == metaphone(movie['EventTitle']).replace(' ', ''):
                 for child in movie['ChildEvents']:
                     if language == child['EventLanguage'] and dimension == child['EventDimension']:
                         return child['EventCode']

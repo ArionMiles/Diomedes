@@ -12,3 +12,9 @@ class TaskForm(forms.ModelForm):
             'movie_dimension': _('Dimension'),
             'movie_date': _('Date'),
         }
+        help_texts = {
+            'movie_name': "Try to name the movie as close to what it is on BMS",
+            # 'movie_language': "",
+            # 'movie_dimension': "",
+            # 'movie_date': "",
+        }
