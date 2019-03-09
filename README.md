@@ -56,13 +56,13 @@ If you wish to run with default Django developement server, make the necessary c
 
 **NOTE: ** Change `REDISTOGO_URL` env var in `.env` to `redis://dioredis:6379`
 
-Start the container by running:
-
-`docker-compose up`
-
-Run the container in detached mode (recommended) using:
+Start the container in detached mode (recommended) using:
 
 `docker-compose up -d`
+
+Create admin account:
+
+`docker exec -it diomedes_web python3 manage.py createsuperuser`
 
 Finally, populate the `Region` model by running:
 
