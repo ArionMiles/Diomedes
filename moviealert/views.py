@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 from .forms import TaskForm
 from .models import Task
@@ -43,7 +44,11 @@ def user_profile(request):
 
 @login_required
 def edit_task(request, id):
-    instance = Task.objects.get(id=id)
+    try:
+        instance = Task.objects.get(id=id, user=request.user)
+    except Task.DoesNotExist:
+        raise Http404("No such record found")
+    
     form = TaskForm(request.POST or None, instance=instance)
 
     if request.method == 'POST':
