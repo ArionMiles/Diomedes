@@ -112,3 +112,5 @@ testing\.py
 ansible/
 
 static/
+
+data/

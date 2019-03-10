@@ -15,16 +15,14 @@ def task_view(request):
 
     if request.method == 'POST':
         if request.user.is_authenticated:
-            print(request.user.get_email_field_name)
             if form.is_valid():
                 obj = form.save(commit=False)
                 obj.movie_name = form.cleaned_data['movie_name'].title()
-                print(obj.movie_name)
                 obj.user = request.user
                 obj.save()
-                return render(request, "success.html", {'obj':obj})
+                return render(request, "success.html", {'obj': obj})
             #messages.error(request, 'Something went wrong')
-            return render(request, "add_task.html", {'form':form})
+            return render(request, "add_task.html", {'form': form})
     else:
         ctx ={
             'form':form,
@@ -34,3 +32,32 @@ def task_view(request):
 
 def about_view(request):
     return render(request, "about.html")
+
+
+@login_required
+def user_profile(request):
+    tasks = Task.objects.filter(user=request.user)
+    ctx = {'user': request.user,
+           'tasks': tasks}
+    return render(request, "account/profile.html", ctx)
+
+@login_required
+def edit_task(request, id):
+    instance = Task.objects.get(id=id)
+    form = TaskForm(request.POST or None, instance=instance)
+
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.movie_name = form.cleaned_data['movie_name'].title()
+                obj.user = request.user
+                obj.save()
+                return render(request, "success.html", {'obj': obj})
+            return render(request, "edit_task.html", {'form': form})
+    else:
+        ctx ={
+            'form':form,
+            'task': instance,
+        }
+        return render(request, "edit_task.html", ctx)

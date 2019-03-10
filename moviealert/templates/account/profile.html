@@ -1,1 +1,21 @@
-<!-- Add something here -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row m-md-5">
+        <div class="col-sm-12">
+            <p class="lead">Email: {{ user.email }}</p>
+            {% if tasks|length > 0 %}
+                <p class="lead">Your reminders:</p>
+                {% for task in tasks %}
+                <p class="lead">
+                    <a href={% url 'edit_task' task.id %}>{{ task.movie_name }} ({{ task.movie_date }})</a>
+                </p>
+                {% endfor %}
+            {% else %}
+                <p class="lead">You have no reminders added. <a href={% url 'task_view' %}>Try adding one</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
