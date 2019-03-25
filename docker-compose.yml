@@ -17,12 +17,13 @@ services:
 
   dioredis:
     image: redis:3-alpine
-    command: redis-server --appendonly yes
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
     ports:
       - "6379:6379"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - ./data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
 
   dioapp:
     build:
