@@ -16,14 +16,14 @@ services:
       - "dioapp:dioapp"
 
   dioredis:
-    image: redis
-    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
+    image: redis:4-alpine
+    # Change "defaultpass" to a more secure password
+    command: redis-server --requirepass defaultpass --appendonly yes
     ports:
       - "6379:6379"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - ./data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
 
   dioapp:
     build:

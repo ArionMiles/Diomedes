@@ -114,3 +114,7 @@ ansible/
 static/
 
 data/
+
+appendonly\.aof
+
+dump\.rdb

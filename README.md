@@ -54,7 +54,9 @@ The docker container runs using gunicorn by default and uses a Nginx server as a
 
 If you wish to run with default Django developement server, make the necessary changes in the [Dockerfile](Dockerfile)
 
-**NOTE: ** Change `REDISTOGO_URL` env var in `.env` to `redis://dioredis:6379`
+**NOTE: ** Change `REDISTOGO_URL` env var in `.env` to `redis://:defaultpass@dioredis:6379`
+
+Also, change the `defaultpass` in the `REDISTOGO_URL` and `docker-compose.yml` file to something more secure.
 
 Start the container in detached mode (recommended) using:
 
