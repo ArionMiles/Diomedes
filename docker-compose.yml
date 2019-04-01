@@ -18,7 +18,7 @@ services:
   dioredis:
     image: redis:4-alpine
     # Change "defaultpass" to a more secure password
-    command: redis-server --requirepass defaultpass --appendonly yes
+    command: redis-server --requirepass defaultpass
     ports:
       - "6379:6379"
     volumes:
