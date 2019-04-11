@@ -2,13 +2,27 @@
 
 {% load crispy_forms_tags %}
 
+{% load socialaccount %}
+
 {% block content %}
+
+<style>
+.google-logo {
+    height: 1em;
+}    
+</style>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <h1 align="center", class="display-4">Sign Up</h1>
         </div>
+    </div>
+    <div class="row justify-content-center p-2">
+        <a href={% provider_login_url "google" %} class="btn btn-light shadow-sm d-inline-flex align-items-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/600px-Google_%22G%22_Logo.svg.png" class="google-logo mr-2">
+                Sign in with Google
+        </a>
     </div>
     <div class="row justify-content-center">
         <div class="col-sm-6">
