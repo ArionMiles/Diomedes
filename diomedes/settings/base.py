@@ -177,6 +177,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+SOCIALACCOUNT_EMAIL_REQUIRED = False # Prevent "You are about to use your Google account to login to..." confirmation.
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.environ['MAILGUN_API_KEY'],
