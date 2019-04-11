@@ -7,7 +7,8 @@ class Dimensions:
         ('2D', '2D'),
         ('2D 4DX', '2D 4DX'),
         ('3D', '3D'),
-        ('3D 4DX', '3D4X'),
+        ('3D 4DX', '3D 4DX'),
+        ('IMAX 2D', 'IMAX 2D'),
         ('IMAX 3D', 'IMAX 3D'),
     )
 
