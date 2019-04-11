@@ -1,7 +1,10 @@
-from django.utils.translation import gettext_lazy as _
+from datetime import date, timedelta
 
+from django.utils.translation import gettext_lazy as _
 from django import forms
+
 from .models import Task
+
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
@@ -17,4 +20,10 @@ class TaskForm(forms.ModelForm):
             # 'movie_language': "",
             # 'movie_dimension': "",
             # 'movie_date': "",
+        }
+        widgets = {
+            'movie_date': forms.DateInput(attrs={
+                                                'type':'date',
+                                                'min': date.today() + timedelta(days=1),
+                                                }),
         }
