@@ -8,12 +8,21 @@ services:
       - .:/app
       - ./static:/app/static
       - "/etc/localtime:/etc/localtime:ro"
+      - $PWD/certbot/conf:/etc/letsencrypt
+      - $PWD/certbot/www:/var/www/certbot
+
     ports:
       - "80:80"
     depends_on:
       - dioapp
     links:
       - "dioapp:dioapp"
+    
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - $PWD/certbot/conf:/etc/letsencrypt
+      - $PWD/certbot/www:/var/www/certbot
 
   dioredis:
     image: redis:4-alpine

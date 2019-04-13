@@ -118,3 +118,5 @@ data/
 appendonly\.aof
 
 dump\.rdb
+
+certbot/
