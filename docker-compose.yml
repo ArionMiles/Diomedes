@@ -11,9 +11,9 @@ services:
       - $PWD/certbot/conf:/etc/letsencrypt
       - $PWD/certbot/www:/var/www/certbot
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - dioapp
     links:
