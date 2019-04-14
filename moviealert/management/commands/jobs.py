@@ -22,7 +22,8 @@ def register_scheduled_jobs():
     scheduler.cron(
         "0 1 * * *",                            # Time for first execution, in UTC timezone (6:30AM)
         func=find_movies_job,                   # Function to be queued
-        repeat=None                             # Repeat this number of times (None means repeat forever)
+        repeat=None,                             # Repeat this number of times (None means repeat forever)
+        timeout=3000
     )
 
 class Command(rqscheduler.Command):
