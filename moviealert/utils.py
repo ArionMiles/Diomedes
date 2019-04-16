@@ -1,6 +1,7 @@
 # TODO: FIND A WAY TO TAKE EVENT URLS, ALONG WITH LANGUAGE/DIMENSION AND CREATE TASKS
 import datetime
 import logging
+import concurrent.futures
 
 from django.conf import settings
 from templated_mail.mail import BaseEmailMessage
@@ -71,8 +72,10 @@ def find_movies(task):
 def find_movies_job():
     unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, search_count__lte=config.SEARCH_COUNT_LIMIT)
     logger.info("Running job for {} movies.".format(len(unfinished_tasks)))
-    for task in unfinished_tasks:
-        find_movies(task)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        executor.map(find_movies, unfinished_tasks)
+    # for task in unfinished_tasks:
+        # find_movies(task)
     
 
 def format_shows_list(shows):
