@@ -231,5 +231,5 @@ LOGIN_REDIRECT_URL = 'task_view'
 
 CONSTANCE_CONFIG = {
     'SEARCH_COUNT_LIMIT': (100, 'The number of days a movie should be searched for.', int),
-    'ADMIN_EMAIL':(None, 'Email ID of Admin', str),
+    'ADMIN_EMAIL':("admin@diomedes.in", 'Email ID of Admin', str),
 }
