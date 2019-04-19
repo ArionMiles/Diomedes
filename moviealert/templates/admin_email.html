@@ -1,0 +1,15 @@
+{% block subject %}{{ task.movie_name }} movie found!{% endblock %}
+
+{% block html_body %}
+<html>
+    <body>
+        <p>User: {{task.user.username}}</p>
+        <p>Movie: {{task.movie_name}}</p>
+        <p>City: {{task.city.name}}</p>
+        <p>Language: {{task.movie_language}}</p>
+        <p>Dimension: {{task.movie_dimension}}</p>
+        <p>Date: {{task.movie_date}}</p>
+        <p>Email Sent at: {{formatted_sent_time}}</p>
+    </body>
+</html>
+{% endblock %}
