@@ -19,11 +19,14 @@ class TaskForm(forms.ModelForm):
             'movie_name': "Try to name the movie as close to what it is on BMS",
             # 'movie_language': "",
             # 'movie_dimension': "",
-            # 'movie_date': "",
+            'movie_date': "Release date or after",
         }
         widgets = {
             'movie_date': forms.DateInput(attrs={
                                                 'type':'date',
-                                                'min': date.today() + timedelta(days=1),
                                                 }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(TaskForm, self).__init__(*args, **kwargs)
+        self.fields['movie_date'].widget.attrs['min'] = date.today() + timedelta(days=1)
