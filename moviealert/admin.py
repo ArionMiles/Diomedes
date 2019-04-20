@@ -1,6 +1,14 @@
 from django.contrib import admin
+from django.db.models import Case, Value, When
+
 from .models import Region, Task
 # Register your models here.
+
+def mark_dropped(modeladmin, request, queryset):
+    queryset.update(dropped=Case(When(dropped=False, then=Value(True)), default=Value(False)))
+
+mark_dropped.short_description = "Toggle Dropped"
+
 
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
@@ -16,3 +24,4 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'movie_name']
     list_filter = ['movie_language', 'movie_dimension', 'task_completed', 'dropped']
     autocomplete_fields = ['city']
+    actions = [mark_dropped]
