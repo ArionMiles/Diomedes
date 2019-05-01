@@ -50,24 +50,9 @@ def find_movies(task):
                         },
         )
 
-        formatted_sent_time = datetime.datetime.now().strftime("%d %B %Y %I:%M:%S%p")
-
         email.send(
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 to=[task.user.email],
-                reply_to=[settings.DEFAULT_REPLY_TO],
-        )
-
-        email_admin = BaseEmailMessage(
-                        template_name='admin_email.html',
-                        context={
-                            'task':task,
-                            'formatted_sent_time': formatted_sent_time,
-                        }
-        )
-        email_admin.send(
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[config.ADMIN_EMAIL],
                 reply_to=[settings.DEFAULT_REPLY_TO],
         )
 
@@ -76,7 +61,7 @@ def find_movies(task):
         logger.info("Hit on {}".format(str(task)))
     except BMSError as e:
         task.search_count += 1
-        if task.search_count > config.SEARCH_COUNT_LIMIT:
+        if task.search_count > config.SEARCH_COUNT_LIMIT: # timezone.localdate() > task.movie_date
             task.dropped = True
             logger.info("Dropping {}. Reason: {}".format(str(task), e))
         else:

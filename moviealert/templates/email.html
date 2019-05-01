@@ -33,6 +33,9 @@
 <body>
 
 <p>Here are the shows for {{ formatted_date }}</p>
+<p>Dimension: {{ task.movie_dimension }}</p>
+<p>Language: {{ task.movie_language }}</p>
+<p>City: {{ task.city.name }}</p>
 
 {% for show in shows %}
     <p>{{ show.venue.name }}</p>
