@@ -11,11 +11,12 @@ class BMS():
     """
     BMS Class with all basic functions
     """
+    BASE_URL = "https://in.bookmyshow.com/serv/getData?cmd="
+    ROOT_URL = "https://in.bookmyshow.com/"
+    
     def __init__(self, region_code, region_name):
         self.region_code = region_code.upper()
         self.region_name = region_name
-        self.BASE_URL = "https://in.bookmyshow.com/serv/getData?cmd="
-        self.ROOT_URL = "https://in.bookmyshow.com/"
         self.region = quote(f"|Code={region_code}|text={region_name}|")
         self.cookies = {
             'Rgn': self.region,
@@ -136,8 +137,19 @@ class BMS():
         :return: List of regions
         :rtype: dict
         """
-        url = 'https://in.bookmyshow.com/serv/getData?cmd=GETREGIONS'
+        url = f'{BMS.BASE_URL}GETREGIONS'
         response = requests.get(url)
         region_list = response.text.split("=", 1)[1]
         region_list = region_list.split(";", 1)[0]
         return json.loads(region_list)
+    
+    @staticmethod
+    def get_subregion_list():
+        """        
+        :return: List of Sub Regions
+        :rtype: dict
+        """
+        url = f'{BMS.BASE_URL}GETREGIONS'
+        response = requests.get(url)
+        sub_regions = response.text.partition("var subregionlist=")[2]
+        return json.loads(sub_regions)
