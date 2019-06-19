@@ -4,8 +4,8 @@ import logging
 import concurrent.futures
 
 from django.conf import settings
+from django.utils import timezone
 from templated_mail.mail import BaseEmailMessage
-from constance import config
 
 from .BMS import BMS
 from .models import Region, Task
@@ -60,8 +60,7 @@ def find_movies(task):
         task.save()
         logger.info("Hit on {}".format(str(task)))
     except BMSError as e:
-        task.search_count += 1
-        if task.search_count > config.SEARCH_COUNT_LIMIT: # timezone.localdate() > task.movie_date
+        if timezone.localdate() > task.movie_date:
             task.dropped = True
             logger.info("Dropping {}. Reason: {}".format(str(task), e))
         else:
@@ -70,12 +69,11 @@ def find_movies(task):
 
 
 def find_movies_job():
-    unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, search_count__lte=config.SEARCH_COUNT_LIMIT)
+    # Search for all movies which have movie date set to today or sometime in the future.
+    unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, movie_date__gte=timezone.localdate())
     logger.info("Running job for {} movies.".format(len(unfinished_tasks)))
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-        executor.map(find_movies, unfinished_tasks)
-    # for task in unfinished_tasks:
-        # find_movies(task)
+    for task in unfinished_tasks:
+        find_movies(task)
     
 
 def format_shows_list(shows):
