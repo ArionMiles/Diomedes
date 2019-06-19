@@ -3,7 +3,7 @@ chardet==3.0.4
 Click==7.0
 croniter==0.3.29
 defusedxml==0.5.0
-Django==2.1.7
+Django==2.1.9
 django-allauth==0.38.0
 django-anymail==5.0
 django-crispy-forms==1.7.2
