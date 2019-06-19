@@ -13,3 +13,10 @@ RQ_QUEUES = {
 }
 
 CONSTANCE_REDIS_CONNECTION = '{}/0'.format(os.getenv('REDISTOGO_URL'))
+
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+DATABASES = {
+    'default': env.db(),
+}

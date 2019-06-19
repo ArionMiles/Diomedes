@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.6-alpine
+FROM python:3.6-slim-stretch
 
 ENV PYTHONUNBUFFERED 1
 
