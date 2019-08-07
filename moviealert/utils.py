@@ -8,7 +8,7 @@ from templated_mail.mail import BaseEmailMessage
 from celery.utils.log import get_task_logger
 
 from .BMS import BMS
-from .models import Region, Task
+from .models import Region, Task, SubRegion, Theater
 from .exceptions import BMSError
 
 logger = get_task_logger(__name__)
@@ -23,6 +23,35 @@ def save_region_data():
         new_region = Region(code=code, name=name, alias=alias)
         new_region.save()
 
+def save_subregion_data():
+    subregion_list = BMS.get_subregion_list()
+    for region in dict(subregion_list).keys():
+        for subregion in subregion_list[region]:
+            region_code = subregion['RegionCode']
+            region_name = subregion['RegionName']
+            
+            subregion_code = subregion['SubRegionCode']
+            subregion_name = subregion['SubRegionName']
+            
+            region, created = Region.objects.get_or_create(code=region_code, name=region_name)
+            
+            subregion = SubRegion(region=region, subregion_code=subregion_code, subregion_name=subregion_name)
+            subregion.save()
+
+def save_theater_data():
+    regions = Region.objects.all()
+    for region in regions:
+        bms = BMS(region.code, region.name)
+        quickbook = bms.quickbook('MT')
+        cinemas = quickbook['cinemas']['BookMyShow']['aiVN']
+        
+        for cinema in cinemas:
+            subregion = SubRegion.objects.get(subregion_code=cinema['VenueSubRegionCode'])
+            venue_code = cinema['VenueCode']
+            name = cinema['VenueName']
+            
+            theater, created = Theater.objects.get_or_create(name=name, venue_code=venue_code, subregion=subregion)
+            theater.save()
 
 def find_movies(task):
     region_code = task.city.code

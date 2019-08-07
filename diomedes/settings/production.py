@@ -6,17 +6,8 @@ DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
 RQ_QUEUES = {
     'default': {
-        'URL': "{}/0".format(os.getenv('REDISTOGO_URL')),
+        'URL': "{}/0".format(env('REDISTOGO_URL')),
         'PASSWORD': '',
         'DEFAULT_TIMEOUT': 360,
     }
-}
-
-CONSTANCE_REDIS_CONNECTION = '{}/0'.format(os.getenv('REDISTOGO_URL'))
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': env.db(),
 }

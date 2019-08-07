@@ -7,21 +7,8 @@ DEBUG = env.bool('DJANGO_DEBUG', default=True)
 
 RQ_QUEUES = {
     'default': {
-        'URL': "{}/0".format(os.getenv('REDISTOGO_URL', 'redis://localhost:6379')),
+        'URL': "{}/0".format(env('REDISTOGO_URL', default='redis://localhost:6379')),
         'PASSWORD': '',
         'DEFAULT_TIMEOUT': 360,
-    }
-}
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'diodb',
-        'PORT': '5432'
     }
 }

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import ArrayField, JSONField
+
 # Create your models here.
 
 class Dimensions:
@@ -31,6 +33,14 @@ class Region(models.Model):
     def __str__(self):
         return self.name
 
+class SubRegion(models.Model):
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    subregion_code = models.CharField(max_length=20, null=True, blank=True)
+    subregion_name = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.subregion_name
+
 class Task(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     city = models.ForeignKey(Region, on_delete=models.CASCADE)
@@ -44,3 +54,25 @@ class Task(models.Model):
 
     def __str__(self):
         return "<{} ({}) ({}) | {} >".format(self.movie_name, self.movie_language, self.movie_dimension, self.movie_date)
+
+class Theater(models.Model):
+    name = models.CharField(max_length=200)
+    venue_code = models.CharField(max_length=20, null=True, blank=True)
+    subregion = models.ForeignKey(SubRegion, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+class Reminder(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    venues = ArrayField(models.CharField(max_length=5), blank=True, null=True)
+    name = models.CharField(max_length=200)
+    language = models.CharField(max_length=20, default='Hindi', choices=Languages.CHOICES)
+    dimension = models.CharField(max_length=20, default="2D", choices=Dimensions.CHOICES)
+    date = models.DateField()
+    completed = models.BooleanField(default=False)
+    dropped = models.BooleanField(default=False)
+    found_time = JSONField(default=list)
+
+    def __str__(self):
+        return "<{} ({}) ({}) | {} >".format(self.name, self.language, self.dimension, self.date)
