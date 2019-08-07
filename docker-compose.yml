@@ -5,7 +5,6 @@ services:
     container_name: diomedes_nginx
     volumes:
       - $PWD/conf.d:/etc/nginx/conf.d
-      - .:/app
       - ./static:/app/static
       - "/etc/localtime:/etc/localtime:ro"
       - $PWD/certbot/conf:/etc/letsencrypt
@@ -44,39 +43,43 @@ services:
     container_name: diomedes_web
     links:
       - "dioredis:dioredis"
+      - "diodb:diodb"
     depends_on:
       - dioredis
-      - dioscheduler
-      - dioworker
+      - diodb
     volumes:
-      - .:/app
       - ./static:/app/static
       - "/etc/localtime:/etc/localtime:ro"
     env_file:
       - ./.env
     ports:
       - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=diomedes.settings.production
 
-  dioscheduler:
+  diocelery:
     image: diomedes
-    container_name: diomedes_rqscheduler
-    command: python3 manage.py jobs
+    container_name: diomedes_celery_b
+    command: ['celery', '-A', 'diomedes', 'worker','-B', '-l', 'info']
     volumes:
-      - .:/app
       - "/etc/localtime:/etc/localtime:ro"
+      - .:/app
     depends_on:
       - dioredis
+      - diodb
     links:
      - "dioredis:dioredis"
-
-  dioworker:
-    image: diomedes
-    container_name: diomedes_rqworker
-    command: python3 manage.py rqworker
+     - "diodb:diodb"
+  
+  diodb:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
     volumes:
-      - .:/app
-      - "/etc/localtime:/etc/localtime:ro"
-    depends_on:
-      - dioredis
-    links:
-    - "dioredis:dioredis"
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
