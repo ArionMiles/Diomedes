@@ -1,17 +1,17 @@
 # TODO: FIND A WAY TO TAKE EVENT URLS, ALONG WITH LANGUAGE/DIMENSION AND CREATE TASKS
 import datetime
-import logging
 import concurrent.futures
 
 from django.conf import settings
 from django.utils import timezone
 from templated_mail.mail import BaseEmailMessage
+from celery.utils.log import get_task_logger
 
 from .BMS import BMS
 from .models import Region, Task
 from .exceptions import BMSError
 
-logger = logging.getLogger(__name__)
+logger = get_task_logger(__name__)
 
 def save_region_data():
     region_list = BMS.get_region_list()
@@ -67,14 +67,6 @@ def find_movies(task):
             logger.info("Miss on {}. Reason: {}".format(str(task), e))
         task.save()
 
-
-def find_movies_job():
-    # Search for all movies which have movie date set to today or sometime in the future.
-    unfinished_tasks = Task.objects.filter(task_completed=False, dropped=False, movie_date__gte=timezone.localdate())
-    logger.info("Running job for {} movies.".format(len(unfinished_tasks)))
-    for task in unfinished_tasks:
-        find_movies(task)
-    
 
 def format_shows_list(shows):
     formatted_shows = []

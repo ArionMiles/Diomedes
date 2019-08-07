@@ -61,11 +61,11 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'django_rq',
     'anymail',
     'templated_mail',
     'django_extensions',
     'crispy_forms',
+    'django_celery_beat',
 ]
 
 LOCAL_APPS = [
@@ -217,3 +217,14 @@ LOGGING = {
 }
 
 LOGIN_REDIRECT_URL = 'task_view'
+
+CELERY_BROKER_URL = env('REDISTOGO_URL')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_RESULT_BACKEND = env('REDISTOGO_URL')
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULE = {
+    'search_movies': {
+        'task': 'moviealert.tasks.find_movies_job',
+        'schedule': 30.0,
+    },
+}

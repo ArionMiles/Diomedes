@@ -22,5 +22,4 @@ admin.site.site_header = "Diomedes"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('moviealert.urls')),
-    path('django-rq/', include('django_rq.urls')),
 ]
