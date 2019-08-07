@@ -9,3 +9,9 @@ venv-windows
 Untitled.ipynb
 db.sqlite3
 djangoproject.log
+certbot
+conf.d
+conf.d-dev
+data
+example.env
+init-letsencrypt.sh

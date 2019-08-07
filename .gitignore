@@ -120,3 +120,5 @@ appendonly\.aof
 dump\.rdb
 
 certbot/
+
+dump\.json
