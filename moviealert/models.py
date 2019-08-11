@@ -38,11 +38,11 @@ class Region(models.Model):
 
 class SubRegion(models.Model):
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    subregion_code = models.CharField(max_length=20, null=True, blank=True)
-    subregion_name = models.CharField(max_length=255, null=True, blank=True)
+    code = models.CharField(max_length=20, null=True, blank=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return self.subregion_name
+        return self.name
 
 class Task(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
@@ -60,17 +60,18 @@ class Task(models.Model):
 
 class Theater(models.Model):
     name = models.CharField(max_length=200)
-    venue_code = models.CharField(max_length=20, null=True, blank=True)
-    subregion = models.ForeignKey(SubRegion, on_delete=models.CASCADE)
+    code = models.CharField(max_length=20, null=True, blank=True, unique=True)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True, blank=True)
+    subregion = models.ForeignKey(SubRegion, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
 
 class Reminder(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    venues = ArrayField(models.CharField(max_length=5), blank=True, null=True)
+    theaters = models.ManyToManyField(Theater, related_name="reminders", through="TheaterLink")
     name = models.CharField(max_length=200)
-    language = models.CharField(max_length=20, default='Hindi', choices=Languages.CHOICES)
+    language = models.CharField(max_length=20, default="Hindi", choices=Languages.CHOICES)
     dimension = models.CharField(max_length=20, default="2D", choices=Dimensions.CHOICES)
     date = models.DateField()
     completed = models.BooleanField(default=False)
@@ -79,6 +80,12 @@ class Reminder(models.Model):
 
     def __str__(self):
         return "<{} ({}) ({}) | {} >".format(self.name, self.language, self.dimension, self.date)
+
+class TheaterLink(models.Model):
+    reminder = models.ForeignKey(Reminder, on_delete=models.CASCADE)
+    theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
+    found = models.BooleanField(default=False)
+    found_at = models.DateTimeField(null=True, blank=True)
 
 class Profile(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
