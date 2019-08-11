@@ -66,6 +66,8 @@ THIRD_PARTY_APPS = [
     'django_extensions',
     'crispy_forms',
     'django_celery_beat',
+    'django_select2',
+    'django_celery_results',
 ]
 
 LOCAL_APPS = [
@@ -234,7 +236,7 @@ DATABASES = {
 
 CELERY_BROKER_URL = env('REDISTOGO_URL')
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_BACKEND = env('REDISTOGO_URL')
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'search_movies': {
