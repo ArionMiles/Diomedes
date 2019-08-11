@@ -169,8 +169,8 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 SOCIALACCOUNT_EMAIL_REQUIRED = False # Prevent "You are about to use your Google account to login to..." confirmation.
 
 ANYMAIL = {
-    "MAILGUN_API_KEY": os.environ['MAILGUN_API_KEY'],
-    "MAILGUN_SENDER_DOMAIN": os.environ['MAILGUN_DOMAIN'],
+    "MAILGUN_API_KEY": env('MAILGUN_API_KEY'),
+    "MAILGUN_SENDER_DOMAIN": env('MAILGUN_DOMAIN'),
 }
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
