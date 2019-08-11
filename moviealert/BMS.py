@@ -101,7 +101,7 @@ class BMS():
             popular_cinemas_list.append(cinema)
         return popular_cinemas_list
     
-    def get_showtimes(self, key, language, date, dimension="2D", event_type="MT"):
+    def get_all_showtimes(self, key, language, date, dimension="2D", event_type="MT"):
         """Get all showtime info for a movie (day, time, ticket types, prices, etc.)
 
         :param str key: Movie name
@@ -176,3 +176,7 @@ class BMS():
         response = requests.get(url)
         sub_regions = response.text.partition("var subregionlist=")[2]
         return json.loads(sub_regions)
+
+    @staticmethod
+    def get_showtime_url(session_id, venue_code):
+        return f"{BMS.ROOT_URL}booktickets/{venue_code}/{session_id}"
