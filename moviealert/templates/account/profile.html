@@ -12,22 +12,22 @@
         <div class="col-sm-12">
             <p class="lead">Email: {{ user.email }}</p>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 pb-4">
             <form method="post">{% csrf_token %}
                 {{ form.subregion | as_crispy_field }}
                 <input type="submit" class="btn btn-primary btn-block" value="Update">
             </form>
         </div>
         <div class="col-sm-12">
-            {% if tasks|length > 0 %}
+            {% if reminders|length > 0 %}
                 <p class="lead">Your reminders:</p>
-                {% for task in tasks %}
+                {% for reminder in reminders %}
                 <p class="lead">
-                    <a href={% url 'edit_task' task.id %}>{{ task.movie_name }} ({{ task.movie_date }})</a>
+                    <a href={% url 'edit_reminder' reminder.id %}>{{ reminder.name }} ({{ reminder.date }})</a>
                 </p>
                 {% endfor %}
             {% else %}
-                <p class="lead">You have no reminders added. <a href={% url 'task_view' %}>Try adding one</a></p>
+                <p class="lead">You have no reminders added. <a href={% url 'reminder_view' %}>Try adding one</a></p>
             {% endif %}
         </div>
     </div>

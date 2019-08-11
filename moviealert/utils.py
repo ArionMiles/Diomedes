@@ -8,7 +8,7 @@ from templated_mail.mail import BaseEmailMessage
 from celery.utils.log import get_task_logger
 
 from .BMS import BMS
-from .models import Region, Task, SubRegion, Theater, TheaterLink
+from .models import Region, SubRegion, Theater, TheaterLink
 from .exceptions import BMSError
 
 logger = get_task_logger(__name__)
@@ -54,62 +54,7 @@ def save_theater_data():
             theater, created = Theater.objects.get_or_create(name=name, code=venue_code, region=region, subregion=subregion)
             theater.save()
 
-def find_movies(task):
-    region_code = task.city.code
-    region_name = task.city.name
-    key = task.movie_name
-    language = task.movie_language
-    dimension = task.movie_dimension
-    date = task.movie_date
-    formatted_date = date.strftime("%a, %B %d %Y")
-
-    bms = BMS(region_code, region_name)
-    
-    try:
-        showtimes = bms.get_all_showtimes(key, language, date, dimension)
-        movie_url = bms.get_movie_url(key, language, date, dimension)
-        shows = format_shows_list(showtimes)
-
-        email = BaseEmailMessage(
-                template_name='email.html',
-                context={
-                        'task': task,
-                        'formatted_date': formatted_date,
-                        'shows': shows,
-                        'movie_url': movie_url,
-                        },
-        )
-
-        email.send(
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[task.user.email],
-                reply_to=[settings.DEFAULT_REPLY_TO],
-        )
-
-        task.task_completed = True
-        task.save()
-        logger.info("Hit on {}".format(str(task)))
-    except BMSError as e:
-        if timezone.localdate() > task.movie_date:
-            task.dropped = True
-            logger.info("Dropping {}. Reason: {}".format(str(task), e))
-        else:
-            logger.info("Miss on {}. Reason: {}".format(str(task), e))
-        task.save()
-
-
 def format_shows_list(shows):
-    formatted_shows = []
-    for show in shows:
-        show_dict = {"venue" : {"name": None, "showtimes": [] }}
-        show_dict['venue']['name'] = show['venue_name']
-        for i_show in show['shows']:            
-            showtime_url = BMS.get_showtime_url(i_show['SessionId'], show['venue_code'])
-            show_dict['venue']['showtimes'].append({'showtime_url': showtime_url, 'time': i_show['ShowTimeDisplay']})
-        formatted_shows.append(show_dict)
-    return formatted_shows
-
-def format_shows_list_new(shows):
     formatted_shows = []
     for show in shows:
         show_dict = {'venue' : {'name': None, 'showtimes': []}}
@@ -121,7 +66,7 @@ def format_shows_list_new(shows):
     return formatted_shows
 
 def check_reminders(reminder):
-    region = reminder.user.profile.region
+    region = reminder.user.profile.subregion.region
     bms = BMS(region.code, region.name)
     try:
         event_code = bms.get_event_code(reminder.name, reminder.language, dimension=reminder.dimension)
@@ -130,7 +75,7 @@ def check_reminders(reminder):
         theaters = [link.theater for link in active_theaters]
         showtimes = bms.get_showtimes_by_venue(event_code, theaters, reminder.date)
         formatted_date = reminder.date.strftime("%a, %B %d %Y")
-        formatted_shows = format_shows_list_new(showtimes)
+        formatted_shows = format_shows_list(showtimes)
         
         theaters_found = [show['venue'] for show in showtimes]
         if len(theaters_found) > 1:

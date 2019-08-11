@@ -218,7 +218,7 @@ LOGGING = {
     },
 }
 
-LOGIN_REDIRECT_URL = 'task_view'
+LOGIN_REDIRECT_URL = 'reminder_view'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -240,7 +240,7 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'search_movies': {
-        'task': 'moviealert.tasks.find_movies_job',
+        'task': 'moviealert.tasks.check_reminders_job',
         'schedule': 30.0,
     },
 }
