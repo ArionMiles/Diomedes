@@ -1,0 +1,52 @@
+{% block subject %}{{ subject }}{% endblock %}
+
+{% block html_body %}
+<html>
+<head>
+        <style>
+            .showtime {
+                border-style: solid;
+                display: inline-block;
+                color: #06f;
+                padding: 0 15px;
+                border-radius: 4px;
+                text-align: center;
+                min-height: 40px;
+                max-height: 40px;
+                line-height: 40px;
+                vertical-align: top;
+                font-size: 12px;
+                margin: 0px 4px 20px 0px;
+                text-decoration: none;
+            }
+            
+            p {
+                font-weight: bold;
+            }
+            
+            .list {
+                display: table;
+                width: 100%;
+            }
+        </style>
+</head>
+<body>
+
+<p>Here are the shows for {{ formatted_date }}</p>
+<p>Dimension: {{ reminder.dimension }}</p>
+<p>Language: {{ reminder.language }}</p>
+<p>City: {{ reminder.user.profile.subregion }}</p>
+
+{% for show in shows %}
+    <p>{{ show.venue.name }}</p>
+    <div class="list">
+        {% for showtime in show.venue.showtimes %}
+            <a class='showtime' href={{ showtime.showtime_url }}>{{ showtime.time }}</a>
+        {% endfor %}
+    </div>
+{% endfor %}
+
+<p>🤖 Beep Boop! Brought to you with ❤ from Diomedes!</p>
+</body>
+</html>
+{% endblock %}

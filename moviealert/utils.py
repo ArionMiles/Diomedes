@@ -8,7 +8,7 @@ from templated_mail.mail import BaseEmailMessage
 from celery.utils.log import get_task_logger
 
 from .BMS import BMS
-from .models import Region, Task, SubRegion, Theater
+from .models import Region, Task, SubRegion, Theater, TheaterLink
 from .exceptions import BMSError
 
 logger = get_task_logger(__name__)
@@ -108,6 +108,67 @@ def format_shows_list(shows):
         formatted_shows.append(show_dict)
     return formatted_shows
 
+def format_shows_list_new(shows):
+    formatted_shows = []
+    for show in shows:
+        show_dict = {'venue' : {'name': None, 'showtimes': []}}
+        show_dict['venue']['name'] = show['venue'].name
+        for i_show in show['shows']:
+            showtime_url = BMS.get_showtime_url(i_show['SessionId'], show['venue'].code)
+            show_dict['venue']['showtimes'].append({'showtime_url':showtime_url, 'time': i_show['ShowTimeDisplay']})
+        formatted_shows.append(show_dict)
+    return formatted_shows
 
-def get_showtime_url(session_id, venue_code):
-    return f"https://in.bookmyshow.com/booktickets/{venue_code}/{session_id}"
+def check_reminders(reminder):
+    region = reminder.user.profile.region
+    bms = BMS(region.code, region.name)
+    try:
+        event_code = bms.get_event_code(reminder.name, reminder.language, dimension=reminder.dimension)
+        # movie_url = bms.get_movie_url(reminder.name, reminder.language, reminder.date, dimension=reminder.dimension)
+        active_theaters = TheaterLink.objects.filter(reminder=reminder, found=False)
+        theaters = [link.theater for link in active_theaters]
+        showtimes = bms.get_showtimes_by_venue(event_code, theaters, reminder.date)
+        formatted_date = reminder.date.strftime("%a, %B %d %Y")
+        formatted_shows = format_shows_list_new(showtimes)
+        
+        theaters_found = [show['venue'] for show in showtimes]
+        if len(theaters_found) > 1:
+            subject = f"{reminder.name} tickets out at {theaters_found[0].name} and more!"
+        else:
+            subject = f"{reminder.name} tickets out at {theaters_found[0].name}!"
+
+        email = BaseEmailMessage(
+                template_name='email_reminder.html',
+                context={
+                        'subject': subject,
+                        'reminder': reminder,
+                        'formatted_date': formatted_date,
+                        'shows': formatted_shows,
+                        # 'movie_url': movie_url,
+                        },
+        )
+
+        email.send(
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[reminder.user.email],
+                reply_to=[settings.DEFAULT_REPLY_TO],
+        )
+        logger.info("Check mail?")
+
+        for theater in theaters_found:
+            t = TheaterLink.objects.get(reminder=reminder, theater=theater)
+            t.found = True
+            t.found_at = timezone.localtime()
+            t.save()
+
+        if TheaterLink.objects.filter(reminder=reminder, found=False).count() == 0:
+            reminder.completed = True
+        reminder.save()
+        logger.info("Hit on {}".format(str(reminder)))
+    except BMSError as e:
+        if timezone.localdate() > reminder.date:
+            reminder.dropped = True
+            logger.info("Dropping {}. Reason: {}".format(str(reminder), e))
+        else:
+            logger.info("Miss on {}. Reason: {}".format(str(reminder), e))
+        reminder.save()

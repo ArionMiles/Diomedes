@@ -5,11 +5,11 @@
 <div class="container">
     <div class="row m-md-5">
         <div class="col-sm-12">
-            <p class="lead"><strong>{{ obj.movie_name }}</strong> has been successfully added. When tickets for date <strong>{{ obj.movie_date }}</strong> become available,
+            <p class="lead"><strong>{{ obj.name }}</strong> has been successfully added. When tickets for date <strong>{{ obj.date }}</strong> become available,
                 we will send you an e-mail.
             </p>
             <p class="lead">
-                You may go back to the <a href={% url 'home' %}>home page</a> or <a href={% url 'task_view' %}>add another movie</a>.
+                You may go back to the <a href={% url 'home' %}>home page</a> or <a href={% url 'reminder_view' %}>add another movie</a>.
                 If you feel like you need to change the details for this movie, you can go to <a href={% url 'profile' %}>your profile,</a>
                 select the respective movie and change the details.
             </p>

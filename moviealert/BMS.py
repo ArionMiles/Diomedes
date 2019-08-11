@@ -130,6 +130,29 @@ class BMS():
             return list_of_shows
         else:
             raise BMSError("No Shows found for {} on {}".format(key, date))
+    
+    def get_showtimes_by_venue(self, event, venues, date):
+        """Return shows for a select list of venues (theaters)
+        
+        :param event: Event Code for the movie
+        :type event: str
+        :param venues: Iterable of Theaters/Venues
+        :type venues: list
+        """
+        date = date.strftime("%Y%m%d")
+        list_of_shows = []
+        for venue in venues:
+            shows = {}
+            showtimes = self.session.get(f'{self.BASE_URL}GETSHOWTIMESBYEVENTANDVENUE&f=json&dc={date}&vc={venue.code}&ec={event}').json()
+            if len(showtimes['BookMyShow']['arrShows']) > 0:
+                shows['shows'] = showtimes['BookMyShow']['arrShows']
+                shows['venue'] = venue
+                list_of_shows.append(shows)
+        
+        if len(list_of_shows) > 0:
+            return list_of_shows
+        else:
+            raise BMSError("No Shows found for {} on {}".format(event, date))
 
     @staticmethod
     def get_region_list():

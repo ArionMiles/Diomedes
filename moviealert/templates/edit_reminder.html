@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block django_select2 %}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block content %}
+
+<form action={% url 'edit_reminder' reminder.id %} method="post">
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <p class="invalid-feedback d-block">
+                    <strong>{{ error|escape }}</strong>
+                </p>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <p class="invalid-feedback d-block">
+                <strong>{{ error|escape }}</strong>
+            </p>
+        {% endfor %}
+    {% endif %}
+    {% csrf_token %}
+    {{ form.name|as_crispy_field }}
+    <div class="row">
+        <div class="col-md-4">
+            {{ form.language|as_crispy_field }}
+        </div>
+        <div class="col-md-4">
+            {{ form.dimension|as_crispy_field }}
+        </div>
+        <div class="col-md-4">
+            {{ form.date|as_crispy_field }}
+        </div>
+    </div>
+    {{ form.theaters|as_crispy_field }}
+    <input type="submit" class="btn btn-primary btn-block" value="Submit">
+</form>
+
+{{ form.media.js }}
+
+{% endblock %}

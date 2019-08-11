@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models import Case, Value, When
 
-from .models import Region, Task, SubRegion, Theater, Reminder
+from .models import Region, Task, SubRegion, Theater, Reminder, Profile
 # Register your models here.
 
 def mark_dropped(modeladmin, request, queryset):
@@ -28,21 +28,33 @@ class TaskAdmin(admin.ModelAdmin):
 
 @admin.register(SubRegion)
 class SubRegionAdmin(admin.ModelAdmin):
-    list_display = ['region', 'subregion_code', 'subregion_name']
-    search_fields = ['region__name', 'region__code', 'subregion_code', 'subregion_name']
-    list_filter = ['subregion_name']
+    list_display = ['region', 'code', 'name']
+    search_fields = ['region__name', 'region__code', 'code', 'name']
 
 @admin.register(Theater)
 class TheaterAdmin(admin.ModelAdmin):
-    list_display = ['name', 'venue_code', 'subregion']
-    list_filter = ['subregion__region']
-    search_fields = ['name', 'venue_code']
+    list_display = ['name', 'code', 'region', 'subregion']
+    search_fields = ['name', 'code']
+
+class TheaterInline(admin.TabularInline):
+    model = Reminder.theaters.through
+    autocomplete_fields = ['theater']
 
 @admin.register(Reminder)
 class ReminderAdmin(admin.ModelAdmin):
-    list_display = ['user', 'name', 'venues', 'language', 'dimension',
-                    'date', 'completed', 'dropped', 'found_time']
-    fields = ['user', 'name', 'venues', ('language', 'dimension'),
+    list_display = ['user', 'name', 'language', 'dimension',
+                    'date', 'completed', 'dropped']
+    fields = ['user', 'name', ('language', 'dimension'),
               'date', ('completed', 'dropped'), 'found_time']
     search_fields = ['user__username', 'name']
     list_filter = ['language', 'dimension', 'completed', 'dropped']
+    inlines = [
+        TheaterInline,
+    ]
+    readonly_fields = ['found_time',]
+    autocomplete_fields = ['theaters', 'user']
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'region', 'subregion']
+    search_fields = ['user__username', 'region__code', 'subregion__code']
