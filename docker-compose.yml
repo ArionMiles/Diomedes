@@ -77,6 +77,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: defaultpass # Change this to something secure
       POSTGRES_DB: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
