@@ -20,7 +20,7 @@ def save_region_data():
         name = region_list[region][0]['name']
         alias = region_list[region][0]['alias']
 
-        new_region = Region(code=code, name=name, alias=alias)
+        new_region, created = Region.objects.get_or_create(code=code, name=name, alias=alias)
         new_region.save()
 
 def save_subregion_data():
@@ -35,7 +35,7 @@ def save_subregion_data():
             
             region, created = Region.objects.get_or_create(code=region_code, name=region_name)
             
-            subregion = SubRegion(region=region, subregion_code=subregion_code, subregion_name=subregion_name)
+            subregion = SubRegion(region=region, code=subregion_code, name=subregion_name)
             subregion.save()
 
 def save_theater_data():
@@ -46,11 +46,12 @@ def save_theater_data():
         cinemas = quickbook['cinemas']['BookMyShow']['aiVN']
         
         for cinema in cinemas:
-            subregion = SubRegion.objects.get(subregion_code=cinema['VenueSubRegionCode'])
+            subregion = SubRegion.objects.get(code=cinema['VenueSubRegionCode'])
+            # region = Region.objects.get()
             venue_code = cinema['VenueCode']
             name = cinema['VenueName']
             
-            theater, created = Theater.objects.get_or_create(name=name, venue_code=venue_code, subregion=subregion)
+            theater, created = Theater.objects.get_or_create(name=name, code=venue_code, region=region, subregion=subregion)
             theater.save()
 
 def find_movies(task):
@@ -65,7 +66,7 @@ def find_movies(task):
     bms = BMS(region_code, region_name)
     
     try:
-        showtimes = bms.get_showtimes(key, language, date, dimension)
+        showtimes = bms.get_all_showtimes(key, language, date, dimension)
         movie_url = bms.get_movie_url(key, language, date, dimension)
         shows = format_shows_list(showtimes)
 
@@ -103,7 +104,7 @@ def format_shows_list(shows):
         show_dict = {"venue" : {"name": None, "showtimes": [] }}
         show_dict['venue']['name'] = show['venue_name']
         for i_show in show['shows']:            
-            showtime_url = get_showtime_url(i_show['SessionId'], show['venue_code'])
+            showtime_url = BMS.get_showtime_url(i_show['SessionId'], show['venue_code'])
             show_dict['venue']['showtimes'].append({'showtime_url': showtime_url, 'time': i_show['ShowTimeDisplay']})
         formatted_shows.append(show_dict)
     return formatted_shows
