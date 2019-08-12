@@ -241,6 +241,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'search_movies': {
         'task': 'moviealert.tasks.check_reminders_job',
-        'schedule': 30.0,
+        'schedule': 3600.0,
     },
 }
