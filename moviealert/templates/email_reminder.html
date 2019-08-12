@@ -35,7 +35,7 @@
 <p>Here are the shows for {{ formatted_date }}</p>
 <p>Dimension: {{ reminder.dimension }}</p>
 <p>Language: {{ reminder.language }}</p>
-<p>City: {{ reminder.user.profile.subregion }}</p>
+<p>City: {{ reminder.user.profile.region }}</p>
 
 {% for show in shows %}
     <p>{{ show.venue.name }}</p>

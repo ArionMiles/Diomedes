@@ -66,7 +66,7 @@ def format_shows_list(shows):
     return formatted_shows
 
 def check_reminders(reminder):
-    region = reminder.user.profile.subregion.region
+    region = reminder.user.profile.region
     bms = BMS(region.code, region.name)
     try:
         event_code = bms.get_event_code(reminder.name, reminder.language, dimension=reminder.dimension)

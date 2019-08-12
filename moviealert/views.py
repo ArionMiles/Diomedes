@@ -11,9 +11,9 @@ from .models import Profile, Reminder, TheaterLink
 class ProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = modelform_factory(Profile, 
-                                    fields=['subregion'], 
-                                    widgets={'subregion':Select2Widget},
-                                    labels={'subregion': 'City'},
+                                    fields=['region'], 
+                                    widgets={'region':Select2Widget},
+                                    labels={'region': 'City'},
                                     )
     template_name = "account/profile.html"
 
