@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404
 from django.views.generic.edit import UpdateView, CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms.models import modelform_factory
 from django_select2.forms import Select2Widget
+from django.core.exceptions import PermissionDenied
 
 from .forms import ReminderForm
 from .models import Profile, Reminder, TheaterLink
@@ -25,7 +26,16 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         context['reminders'] = Reminder.objects.filter(user=self.request.user)
         return context
 
-class ReminderView(LoginRequiredMixin, CreateView):
+class RegionExistsMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.profile.region
+
+    def handle_no_permission(self):
+        if self.raise_exception:
+            raise PermissionDenied(self.get_permission_denied_message())
+        return redirect('profile')
+
+class ReminderView(LoginRequiredMixin, RegionExistsMixin, CreateView):
     form_class = ReminderForm
     model = Reminder
     template_name = "reminder.html"
