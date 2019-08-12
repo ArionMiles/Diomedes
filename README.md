@@ -1,12 +1,6 @@
 # Diomedes
 
-Inspired by [django_moviealert](https://github.com/iAmMrinal0/django_moviealert)
-
 Sends email alerts for movie tickets as soon as they become available.
-
-I had trouble getting the original project to run as it was missing an important script for populating the Regions database model, without which it's impossible to run the project. It also used HTML scraping, and the markup of BookMyShow (BMS) has changed since the original project was last updated. It also wasn't production ready (used Django development server).
-
-This project uses a different technique to search the movies, and can do much more, including Sports, Plays, and other events (though the project is currently purposely limited to Movies). This project is easily deployable via Docker. The website is also mobile friendly.
 
 # Components
 - Django
@@ -32,7 +26,9 @@ If you wish to run with default Django developement server, make the necessary c
 For development, there's a separate compose file you can run with:
 `docker-compose -f docker-compose.dev.yml up`
 
-**NOTE:** Change the `defaultpass` in `docker-compose.yml` (Redis command and POSTGRES_PASSWORD) to something more secure and set the same in the `.env` file for `REDIS_PASSWORD` and `POSTGRES_PASSWORD` respectively.
+**NOTE:** Change the `defaultpass` in `docker-compose.yml` (Redis command and POSTGRES_PASSWORD) to something more secure and set the same in the `.env` file for `POSTGRES_PASSWORD`.
+
+Change `defaultpass` in `REDISTOGO_URL` to what you wrote in `docker-compose.yml` for Redis command
 
 Start the container in detached mode (recommended) using:
 
@@ -58,6 +54,8 @@ To stop and remove all containers:
 `docker-compose down --remove-orphans`
 
 **NOTE:** Change the Google Analytics tracking code in [base.html](./moviealert/templates/base.html) with your own if you are hosting the project publically somewhere else so that your traffic doesn't get logged with mine.
+
+Inspired by [django_moviealert](https://github.com/iAmMrinal0/django_moviealert)
 
 # License
 [MIT License](LICENSE)
