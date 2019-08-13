@@ -60,7 +60,7 @@ services:
   diocelery:
     image: diomedes
     container_name: diomedes_celery_b
-    command: ['celery', '-A', 'diomedes', 'worker','-B', '-l', 'info']
+    command: ['celery', '-A', 'diomedes', 'worker','-B', '-l', 'info', '--scheduler', 'django_celery_beat.schedulers:DatabaseScheduler']
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - .:/app
