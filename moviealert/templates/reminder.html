@@ -1,9 +1,15 @@
 {% extends "base.html" %}
-
+{% load staticfiles %}
 {% load crispy_forms_tags %}
 
-{% block django_select2 %}
-{{ form.media.css }}
+{% block css %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    {{ form.media.css }}
+{% endblock%}
+
+{% block javascript %}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src={% static 'js/autocomplete.js' %}></script>
 {% endblock %}
 
 {% block content %}

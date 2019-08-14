@@ -32,6 +32,12 @@ class BMS():
         """
         response = self.session.get(f'{self.BASE_URL}QUICKBOOK&type={event_type}')
         return response.json()
+    
+    def get_movie_list(self):
+        quickbook = self.quickbook("MT")
+        movies = quickbook['moviesData']['BookMyShow']['arrEvents']
+        movie_list = [movie['EventTitle'] for movie in movies]
+        return movie_list
 
     def get_movie_url(self, key, language, date, dimension="2D", event_type="MT"):
         """Returns movie url

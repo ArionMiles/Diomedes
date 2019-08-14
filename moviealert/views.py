@@ -1,6 +1,8 @@
+import json
+
 from django.shortcuts import render, redirect
-from django.http import Http404
-from django.views.generic.edit import UpdateView, CreateView
+from django.http import Http404, HttpResponse
+from django.views.generic.edit import UpdateView, CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms.models import modelform_factory
 from django_select2.forms import Select2Widget
@@ -8,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 
 from .forms import ReminderForm
 from .models import Profile, Reminder, TheaterLink
+from .BMS import BMS
 
 class ProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
@@ -85,3 +88,14 @@ class ReminderEditView(LoginRequiredMixin, UpdateView):
             t, created = TheaterLink.objects.get_or_create(reminder=model, theater=theater)
             t.save()
         return render(self.request, "success.html", {'obj': model})
+
+class AjaxMovieListView(View):
+    def get(self, request):
+        user_region = self.request.user.profile.region
+        if self.request.is_ajax():
+            bms = BMS(user_region.code, user_region.name)
+            movie_list = json.dumps(bms.get_movie_list())
+        else:
+            movie_list = "This endpoint only responds to AJAX requests"
+        mimetype = "application/json"
+        return HttpResponse(movie_list, mimetype)

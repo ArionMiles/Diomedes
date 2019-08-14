@@ -2,7 +2,7 @@
 
 {% load crispy_forms_tags %}
 
-{% block django_select2 %}
+{% block css %}
 {{ form.media.css }}
 {% endblock %}
 
@@ -31,23 +31,28 @@
             </form>
         </div>
     </div>
-    <div class="row justify-content-center">
         {% if reminders|length > 0 %}
+        <div class="row justify-content-center">
         <div class="col-sm-6">
             <p class="lead">Your reminders:</p>
+        </div>
+        </div>
             {% for reminder in reminders %}
+            <div class="row justify-content-center">
+            <div class="col-sm-6">
             <p class="lead">
                 <a href={% url 'edit_reminder' reminder.id %}>{{ reminder.name }} ({{ reminder.date }})</a>
             </p>
+            </div>
         </div>
         {% endfor %}
         {% else %}
+        <div class="row justify-content-center">
         <div class="col-sm-6">
             <p class="lead">You have no reminders added. <a href={% url 'reminder_view' %}>Try adding one</a></p>
         </div>
-        {% endif %}
     </div>
-</div>
+        {% endif %}
 
 {{ form.media.js }}
 
