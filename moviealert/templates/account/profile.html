@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block django_select2 %}
-    {{ form.media.css }}
+{{ form.media.css }}
 {% endblock %}
 
 {% block content %}
@@ -21,9 +21,9 @@
     <div class="row justify-content-center">
         <div class="col-sm-6 pb-4">
             {% if not user.profile.region %}
-                <p class="alert alert-primary">
-                    <strong>Please set your City before adding a reminder</strong>
-                </p>
+            <p class="alert alert-primary">
+                <strong>Please set your City before adding a reminder</strong>
+            </p>
             {% endif %}
             <form method="post">{% csrf_token %}
                 {{ form.region | as_crispy_field }}
@@ -33,18 +33,18 @@
     </div>
     <div class="row justify-content-center">
         {% if reminders|length > 0 %}
-            <div class="col-sm-6">
-                <p class="lead">Your reminders:</p>
+        <div class="col-sm-6">
+            <p class="lead">Your reminders:</p>
             {% for reminder in reminders %}
-                <p class="lead">
-                    <a href={% url 'edit_reminder' reminder.id %}>{{ reminder.name }} ({{ reminder.date }})</a>
-                </p>
-                </div>
-            {% endfor %}
+            <p class="lead">
+                <a href={% url 'edit_reminder' reminder.id %}>{{ reminder.name }} ({{ reminder.date }})</a>
+            </p>
+        </div>
+        {% endfor %}
         {% else %}
-            <div class="col-sm-6">
-                <p class="lead">You have no reminders added. <a href={% url 'reminder_view' %}>Try adding one</a></p>
-            </div>
+        <div class="col-sm-6">
+            <p class="lead">You have no reminders added. <a href={% url 'reminder_view' %}>Try adding one</a></p>
+        </div>
         {% endif %}
     </div>
 </div>

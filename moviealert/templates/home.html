@@ -5,20 +5,15 @@
 <div class="container">
     <div class="row m-md-5">
         <div class="col-sm-12">
-            <h1 class="display-4">Diomedes</h1>
-        </div>
-        <div class="col-sm-12">
             <p class="lead">Diomedes allows you to get early notifications for your favorite movies about to hit
-                theaters. 
+                theaters.
             </p>
-            <p class="lead">Simply sign up (or login with your Google account) and give us the details of the movie and
-                the date, along with your choice of theaters and we'll send you an email as soon as the theaters open their sales!
+            <p class="lead">Simply {% if not user.is_authenticated %}<a href={% url 'account_signup' %}>sign up</a>
+                (or <a href={% url 'account_login' %}>login</a> with your Google account)
+                {% else %}sign up (or login with your Google account){% endif %} and <a href={% url 'reminder_view' %}>
+                    give us the details of the movie</a> and the date, along with your choice of theaters and we'll send
+                you an email as soon as the theaters open their sales!
             </p>
-            {% if not user.is_authenticated %}
-            <p class="lead">
-                Start by <a href={% url 'account_login' %}>logging in</a>.
-            </p>
-            {% endif %}
         </div>
     </div>
 </div>
