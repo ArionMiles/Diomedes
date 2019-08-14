@@ -49,10 +49,13 @@ class ReminderView(LoginRequiredMixin, RegionExistsMixin, CreateView):
         model = form.save(commit=False)
         model.name = form.cleaned_data['name'].title()
         model.user = self.request.user
+        
+        if Reminder.objects.filter(user=model.user, name=model.name, language=model.language, dimension=model.dimension, date=model.date).exists():
+            form.add_error(None, "This reminder already exists!")
+            return self.form_invalid(form)
         model.save()
         for theater in form.cleaned_data['theaters'][:5]:
             TheaterLink.objects.create(reminder=model, theater=theater)
-        # form.save_m2m() # Saving m2m relations, refer ModelForm doc to understand why
         return render(self.request, "success.html", {'obj': model})
 
 class ReminderEditView(LoginRequiredMixin, UpdateView):
