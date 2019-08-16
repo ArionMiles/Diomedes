@@ -65,9 +65,7 @@ def format_shows_list(shows):
         formatted_shows.append(show_dict)
     return formatted_shows
 
-def check_reminders(reminder):
-    region = reminder.user.profile.region
-    bms = BMS(region.code, region.name)
+def check_reminders(bms, reminder):
     try:
         event_code = bms.get_event_code(reminder.name, reminder.language, dimension=reminder.dimension)
         # movie_url = bms.get_movie_url(reminder.name, reminder.language, reminder.date, dimension=reminder.dimension)
@@ -112,9 +110,5 @@ def check_reminders(reminder):
         reminder.save()
         logger.info("Hit on {}".format(str(reminder)))
     except BMSError as e:
-        if timezone.localdate() > reminder.date:
-            reminder.dropped = True
-            logger.info("Dropping {}. Reason: {}".format(str(reminder), e))
-        else:
-            logger.info("Miss on {}. Reason: {}".format(str(reminder), e))
+        logger.info("Miss on {}. Reason: {}".format(str(reminder), e))
         reminder.save()

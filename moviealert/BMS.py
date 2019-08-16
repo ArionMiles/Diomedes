@@ -14,7 +14,7 @@ class BMS():
     BASE_URL = "https://in.bookmyshow.com/serv/getData?cmd="
     ROOT_URL = "https://in.bookmyshow.com/"
     
-    def __init__(self, region_code, region_name):
+    def __init__(self, region_code, region_name, event_type="MT"):
         self.region_code = region_code.upper()
         self.region_name = region_name
         self.region = quote(f"|Code={region_code}|text={region_name}|")
@@ -23,8 +23,9 @@ class BMS():
         }
         self.session = requests.Session()
         self.session.get(self.ROOT_URL, cookies=self.cookies)
+        self._quickbook = self.get_quickbook(event_type)
     
-    def quickbook(self, event_type):
+    def get_quickbook(self, event_type="MT"):
         """Returns quickbook with all current events.
         
         :param str event_type: Event types( MT(Movies), CT(Events), PL(Plays), SP(Sports))
@@ -34,8 +35,7 @@ class BMS():
         return response.json()
     
     def get_movie_list(self):
-        quickbook = self.quickbook("MT")
-        movies = quickbook['moviesData']['BookMyShow']['arrEvents']
+        movies = self._quickbook['moviesData']['BookMyShow']['arrEvents']
         movie_list = [movie['EventTitle'] for movie in movies]
         return movie_list
 
@@ -55,10 +55,9 @@ class BMS():
         city: region_name (with spaces replaced with hypen)
         TODO: Test edge cases
         """
-        quickbook = self.quickbook(event_type)
         city = self.region_name.replace(" ", "-")
         date = date.strftime("%Y%m%d")
-        movies = quickbook['moviesData']['BookMyShow']['arrEvents']
+        movies = self._quickbook['moviesData']['BookMyShow']['arrEvents']
         key = metaphone(key).replace(' ', '')
         for movie in movies:
             if key == metaphone(movie['EventTitle']).replace(' ', ''):
@@ -83,8 +82,7 @@ class BMS():
         :rtype: str
         :raises BMSError: If the event code is not found
         """
-        quickbook = self.quickbook(event_type)
-        movies = quickbook['moviesData']['BookMyShow']['arrEvents']
+        movies = self._quickbook['moviesData']['BookMyShow']['arrEvents']
         key = metaphone(key).replace(' ', '')
         for movie in movies:
             if key == metaphone(movie['EventTitle']).replace(' ', ''):
