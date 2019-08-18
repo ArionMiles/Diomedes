@@ -7,6 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms.models import modelform_factory
 from django_select2.forms import Select2Widget
 from django.core.exceptions import PermissionDenied
+from django.conf import settings
+from django.utils import timezone
 
 from .forms import ReminderForm
 from .models import Profile, Reminder, TheaterLink
@@ -94,7 +96,9 @@ class AjaxMovieListView(View):
         user_region = self.request.user.profile.region
         if self.request.is_ajax():
             bms = BMS(user_region.code, user_region.name)
-            movie_list = json.dumps(bms.get_movie_list())
+            movie_list = bms.get_movie_list()
+            movie_list += bms.get_coming_soon(settings.BMS_TOKEN, 20, timezone.localdate())
+            movie_list = json.dumps(movie_list)
         else:
             movie_list = "This endpoint only responds to AJAX requests"
         mimetype = "application/json"

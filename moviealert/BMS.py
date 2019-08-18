@@ -13,7 +13,8 @@ class BMS():
     """
     BASE_URL = "https://in.bookmyshow.com/serv/getData?cmd="
     ROOT_URL = "https://in.bookmyshow.com/"
-    
+    COMING_SOON_URL = "https://data-in.bookmyshow.com/?cmd=COMINGSOON"
+
     def __init__(self, region_code, region_name, event_type="MT"):
         self.region_code = region_code.upper()
         self.region_name = region_name
@@ -35,6 +36,11 @@ class BMS():
         return response.json()
     
     def get_movie_list(self):
+        """Get list of movies currently showing
+        
+        :return: List of movies
+        :rtype: list
+        """
         movies = self._quickbook['moviesData']['BookMyShow']['arrEvents']
         movie_list = [movie['EventTitle'] for movie in movies]
         return movie_list
@@ -184,3 +190,43 @@ class BMS():
     @staticmethod
     def get_showtime_url(session_id, venue_code):
         return f"{BMS.ROOT_URL}booktickets/{venue_code}/{session_id}"
+    
+    def get_coming_soon(self, token, count, date):
+        """Get list of movies coming soon
+        
+        :param token: BMS Token
+        :type token: str
+        :param count: Number of events to fetch
+        :type count: int
+        :return: List of movies coming soon
+        :rtype: list
+        """
+        params = {
+            't': token,
+            'rc': self.region_code,
+            'pg': '1',
+            'cnt': count,
+            'yy': date.strftime("%Y"),
+            'mm': date.strftime("%m"),
+        }
+        response = self.session.get(self.COMING_SOON_URL, params=params).json()
+        events = response['BookMyShow']['Events']
+        movies = [event['EventTitle'] for event in events]
+        return movies
+    
+    def get_trending(self, token):
+        """Get a list of trending movies on BMS
+        
+        :param token: BMS Token
+        :type token: str
+        :return: Distinct list of movie names
+        :rtype: list
+        """
+        params = {
+            't': token,
+            'rc': self.region_code,
+        }
+        response = self.session.get(self.COMING_SOON_URL, params=params).json()
+        trending = response['BookMyShow']['Trending']
+        movies = [trend['EventTitle'].split(' (')[0] for trend in trending] # Some EventTitles have Language & Dimensions in parenthesis
+        return list(set(movies))

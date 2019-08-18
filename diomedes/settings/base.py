@@ -244,3 +244,5 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': 3600.0,
     },
 }
+
+BMS_TOKEN = env("BMS_TOKEN")
