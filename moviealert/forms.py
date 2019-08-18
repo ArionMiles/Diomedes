@@ -22,4 +22,4 @@ class ReminderForm(forms.ModelForm):
         self.request = kwargs.pop('request')
         super(ReminderForm, self).__init__(*args, **kwargs)
         self.fields['date'].widget.attrs['min'] = date.today() + timedelta(days=1)
-        self.fields['theaters'].queryset = Theater.objects.filter(region=self.request.user.profile.region)
+        self.fields['theaters'].queryset = Theater.objects.filter(region=self.request.user.profile.region).order_by('name')
