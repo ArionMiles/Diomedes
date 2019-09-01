@@ -21,7 +21,7 @@ def check_reminders_job():
     # Segregating reminders into regions
     reminders_by_region = defaultdict(list)
     for reminder in pending_reminders:
-            reminders_by_region[reminder.user.profile.region].append(reminder)
+        reminders_by_region[reminder.user.profile.region].append(reminder)
 
     logger.info("Running job for {} movies.".format(len(pending_reminders)))
     for region, reminders in reminders_by_region.items():
