@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <h1 class="display-4">Trending Movies</h1>
+        </div>
+    </div>
+        {% for movie in trending %}
+        <div class="row justify-content-center">
+            <div class="col-sm-6">
+                <p class='lead'><a href={% url 'reminder_view' %}?movie={{ movie|urlencode }}>{{ movie }}</a></p>
+            </div>
+        </div>
+        {% endfor %}
+</div>
+{% endblock %}

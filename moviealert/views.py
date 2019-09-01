@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse
 from django.views.generic.edit import UpdateView, CreateView, View
+from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms.models import modelform_factory
 from django_select2.forms import Select2Widget
@@ -50,6 +51,12 @@ class ReminderView(LoginRequiredMixin, RegionExistsMixin, CreateView):
         kwargs.update({'request': self.request})
         return kwargs
 
+    def get_initial(self):
+        movie = self.request.GET.get('movie')
+        initial = super(ReminderView, self).get_initial()
+        initial['name'] = movie
+        return initial
+
     def form_valid(self, form):
         model = form.save(commit=False)
         model.name = form.cleaned_data['name'].title()
@@ -96,10 +103,19 @@ class AjaxMovieListView(View):
         user_region = self.request.user.profile.region
         if self.request.is_ajax():
             bms = BMS(user_region.code, user_region.name)
-            movie_list = bms.get_movie_list()
-            movie_list += bms.get_coming_soon(settings.BMS_TOKEN, 20, timezone.localdate())
-            movie_list = json.dumps(movie_list)
+            data = bms.get_movie_list()
+            data += bms.get_coming_soon(settings.BMS_TOKEN, 20, timezone.localdate())
+            data = json.dumps(data)
         else:
-            movie_list = "This endpoint only responds to AJAX requests"
+            data = "This endpoint only responds to AJAX requests"
         mimetype = "application/json"
-        return HttpResponse(movie_list, mimetype)
+        return HttpResponse(data, mimetype)
+
+class TrendingView(TemplateView):
+    template_name = 'trending.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        trends = BMS.get_trending(self.request.user.profile.region.code, settings.BMS_TOKEN)
+        context['trending'] = trends
+        return context
