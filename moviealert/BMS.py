@@ -214,7 +214,8 @@ class BMS():
         movies = [event['EventTitle'] for event in events]
         return movies
     
-    def get_trending(self, token):
+    @staticmethod
+    def get_trending(region_code, token):
         """Get a list of trending movies on BMS
         
         :param token: BMS Token
@@ -224,9 +225,9 @@ class BMS():
         """
         params = {
             't': token,
-            'rc': self.region_code,
+            'rc': region_code,
         }
-        response = self.session.get(self.COMING_SOON_URL, params=params).json()
+        response = requests.get(BMS.COMING_SOON_URL, params=params).json()
         trending = response['BookMyShow']['Trending']
         movies = [trend['EventTitle'].split(' (')[0] for trend in trending] # Some EventTitles have Language & Dimensions in parenthesis
         return list(set(movies))
