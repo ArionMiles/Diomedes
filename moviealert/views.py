@@ -70,7 +70,7 @@ class ReminderView(LoginRequiredMixin, RegionExistsMixin, CreateView):
             TheaterLink.objects.create(reminder=model, theater=theater)
         return render(self.request, "success.html", {'obj': model})
 
-class ReminderEditView(LoginRequiredMixin, UpdateView):
+class ReminderEditView(LoginRequiredMixin, RegionExistsMixin, UpdateView):
     form_class = ReminderForm
     model = Reminder
     template_name = "edit_reminder.html"
