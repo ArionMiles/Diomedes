@@ -111,7 +111,7 @@ class AjaxMovieListView(View):
         mimetype = "application/json"
         return HttpResponse(data, mimetype)
 
-class TrendingView(TemplateView):
+class TrendingView(LoginRequiredMixin, TemplateView):
     template_name = 'trending.html'
 
     def get_context_data(self, **kwargs):
