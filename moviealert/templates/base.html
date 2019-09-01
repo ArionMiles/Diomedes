@@ -46,10 +46,10 @@
           <li class="nav-item">
             <a class="nav-link" href={% url 'reminder_view' %}>Add a Reminder</a>
           </li>
+          {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href={% url 'trends' %}>Trending</a>
           </li>
-          {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href={% url 'profile' %}>Profile</a>
           </li>
