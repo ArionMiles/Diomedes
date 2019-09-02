@@ -91,7 +91,6 @@ def check_reminders(bms, reminder):
                 to=[reminder.user.email],
                 reply_to=[settings.DEFAULT_REPLY_TO],
         )
-        logger.info("Check mail?")
 
         for theater in theaters_found:
             TheaterLink.objects.filter(reminder=reminder, theater=theater).update(found=True, found_at=timezone.localtime())
