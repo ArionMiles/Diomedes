@@ -1,7 +1,7 @@
 import json
 
-from django.shortcuts import render, redirect
-from django.http import Http404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.views.generic.edit import UpdateView, CreateView, View
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -17,11 +17,9 @@ from .BMS import BMS
 
 class ProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
-    form_class = modelform_factory(Profile, 
-                                    fields=['region'], 
-                                    widgets={'region':Select2Widget},
-                                    labels={'region': 'City'},
-                                    )
+    form_class = modelform_factory(Profile, fields=['region'], 
+                                            widgets={'region':Select2Widget},
+                                            labels={'region': 'City'})
     template_name = "account/profile.html"
 
     def get_object(self):
@@ -29,7 +27,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProfileView, self).get_context_data(*args, **kwargs)
-        context['reminders'] = Reminder.objects.filter(user=self.request.user)
+        context['reminders'] = Reminder.objects.filter(user=self.request.user).order_by('date')
         return context
 
 class RegionExistsMixin(UserPassesTestMixin):
@@ -62,7 +60,8 @@ class ReminderView(LoginRequiredMixin, RegionExistsMixin, CreateView):
         model.name = form.cleaned_data['name'].title()
         model.user = self.request.user
         
-        if Reminder.objects.filter(user=model.user, name=model.name, language=model.language, dimension=model.dimension, date=model.date).exists():
+        if Reminder.objects.filter(user=model.user, name=model.name, language=model.language, 
+                                                    dimension=model.dimension, date=model.date).exists():
             form.add_error(None, "This reminder already exists!")
             return self.form_invalid(form)
         model.save()
@@ -81,35 +80,28 @@ class ReminderEditView(LoginRequiredMixin, RegionExistsMixin, UpdateView):
         return kwargs
 
     def get_object(self, queryset=None):
-        try:
-            obj = Reminder.objects.get(id=self.kwargs['id'], user=self.request.user)
-        except Reminder.DoesNotExist:
-            raise Http404()
+        obj = get_object_or_404(Reminder, id=self.kwargs['id'], user=self.request.user)
         return obj
-    
+
     def form_valid(self, form):
         model = form.save(commit=False)
         model.name = form.cleaned_data['name'].title()
         model.user = self.request.user
         model.save()
-        TheaterLink.objects.filter(reminder=model, found=False).delete() # Delete theaters which haven't opened sales yet
-        for theater in form.cleaned_data['theaters'][:5]:
-            t, created = TheaterLink.objects.get_or_create(reminder=model, theater=theater)
-            t.save()
+        # Delete theaters which haven't opened sales yet
+        TheaterLink.objects.filter(reminder=model, found=False).delete()
+
+        for theater in form.cleaned_data['theaters'][:settings.MAX_THEATERS]:
+            TheaterLink.objects.get_or_create(reminder=model, theater=theater)
         return render(self.request, "success.html", {'obj': model})
 
 class AjaxMovieListView(View):
     def get(self, request):
         user_region = self.request.user.profile.region
-        if self.request.is_ajax():
-            bms = BMS(user_region.code, user_region.name)
-            data = bms.get_movie_list()
-            data += bms.get_coming_soon(settings.BMS_TOKEN, 20, timezone.localdate())
-            data = json.dumps(data)
-        else:
-            data = "This endpoint only responds to AJAX requests"
-        mimetype = "application/json"
-        return HttpResponse(data, mimetype)
+        bms = BMS(user_region.code, user_region.name)
+        data = bms.get_movie_list()
+        data += bms.get_coming_soon(settings.BMS_TOKEN, 20, timezone.localdate())
+        return JsonResponse({'movies': data, 'status':'ok'})
 
 class TrendingView(LoginRequiredMixin, RegionExistsMixin, TemplateView):
     template_name = 'trending.html'

@@ -4,8 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
 
-# Create your models here.
-
 class Dimensions:
     CHOICES = (
         ('2D', '2D'),
@@ -63,7 +61,7 @@ class Reminder(models.Model):
     dropped = models.BooleanField(default=False)
 
     def __str__(self):
-        return "<{} ({}) ({}) | {} >".format(self.name, self.language, self.dimension, self.date)
+        return "{} ({}) - {} - {} ".format(self.name, self.language, self.dimension, self.date)
 
 class TheaterLink(models.Model):
     reminder = models.ForeignKey(Reminder, on_delete=models.CASCADE)
@@ -86,8 +84,3 @@ class Profile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=get_user_model())
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()

@@ -6,7 +6,7 @@ $(document).ready(function () {
         cache: true,
         success: function (data) {
             $("#id_name").autocomplete({
-                source: data
+                source: data.movies
             });
         }
     });

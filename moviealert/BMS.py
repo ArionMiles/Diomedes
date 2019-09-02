@@ -3,7 +3,6 @@ import datetime
 from urllib.parse import quote
 
 import requests
-from jellyfish import metaphone
 
 from .exceptions import BMSError
 
@@ -59,14 +58,12 @@ class BMS():
         :raises BMSError: If movie is not found
         
         city: region_name (with spaces replaced with hypen)
-        TODO: Test edge cases
         """
         city = self.region_name.replace(" ", "-")
         date = date.strftime("%Y%m%d")
         movies = self._quickbook['moviesData']['BookMyShow']['arrEvents']
-        key = metaphone(key).replace(' ', '')
         for movie in movies:
-            if key == metaphone(movie['EventTitle']).replace(' ', ''):
+            if movie['EventTitle'] == key:
                 for child in movie['ChildEvents']:
                     if language == child['EventLanguage'] and dimension == child['EventDimension']:
                         event_url = child['EventURL']
@@ -89,9 +86,8 @@ class BMS():
         :raises BMSError: If the event code is not found
         """
         movies = self._quickbook['moviesData']['BookMyShow']['arrEvents']
-        key = metaphone(key).replace(' ', '')
         for movie in movies:
-            if key == metaphone(movie['EventTitle']).replace(' ', ''):
+            if movie['EventTitle'] == key:
                 for child in movie['ChildEvents']:
                     if language == child['EventLanguage'] and dimension == child['EventDimension']:
                         return child['EventCode']
@@ -136,7 +132,7 @@ class BMS():
                 shows['venue_name'] = showtimes['BookMyShow']['arrVenue'][0]['VenueName']
                 list_of_shows.append(shows)
         
-        if len(list_of_shows) > 0:
+        if list_of_shows:
             return list_of_shows
         else:
             raise BMSError("No Shows found for {} on {}".format(key, date))
@@ -229,5 +225,6 @@ class BMS():
         }
         response = requests.get(BMS.COMING_SOON_URL, params=params).json()
         trending = response['BookMyShow']['Trending']
-        movies = [trend['EventTitle'].split(' (')[0] for trend in trending] # Some EventTitles have Language & Dimensions in parenthesis
+        # Some EventTitles have Language & Dimensions in parenthesis
+        movies = [trend['EventTitle'].split(' (')[0] for trend in trending]
         return list(set(movies))

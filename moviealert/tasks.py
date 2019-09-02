@@ -4,10 +4,10 @@ from collections import defaultdict
 from django.utils import timezone
 from celery.utils.log import get_task_logger
 
-from .models import Reminder
-from .utils import check_reminders
 from diomedes.celery import app
-from .BMS import BMS
+from moviealert.models import Reminder
+from moviealert.utils import check_reminders
+from moviealert.BMS import BMS
 
 logger = get_task_logger(__name__)
 

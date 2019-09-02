@@ -20,8 +20,7 @@ def save_region_data():
         name = region_list[region][0]['name']
         alias = region_list[region][0]['alias']
 
-        new_region, created = Region.objects.get_or_create(code=code, name=name, alias=alias)
-        new_region.save()
+        Region.objects.get_or_create(code=code, name=name, alias=alias)
 
 def save_subregion_data():
     subregion_list = BMS.get_subregion_list()
@@ -33,7 +32,7 @@ def save_subregion_data():
             subregion_code = subregion['SubRegionCode']
             subregion_name = subregion['SubRegionName']
             
-            region, created = Region.objects.get_or_create(code=region_code, name=region_name)
+            region, _ = Region.objects.get_or_create(code=region_code, name=region_name)
             
             subregion = SubRegion(region=region, code=subregion_code, name=subregion_name)
             subregion.save()
@@ -42,17 +41,14 @@ def save_theater_data():
     regions = Region.objects.all()
     for region in regions:
         bms = BMS(region.code, region.name)
-        quickbook = bms.quickbook('MT')
-        cinemas = quickbook['cinemas']['BookMyShow']['aiVN']
+        cinemas = bms._quickbook['cinemas']['BookMyShow']['aiVN']
         
         for cinema in cinemas:
             subregion = SubRegion.objects.get(code=cinema['VenueSubRegionCode'])
-            # region = Region.objects.get()
             venue_code = cinema['VenueCode']
             name = cinema['VenueName']
             
-            theater, created = Theater.objects.get_or_create(name=name, code=venue_code, region=region, subregion=subregion)
-            theater.save()
+            Theater.objects.get_or_create(name=name, code=venue_code, region=region, subregion=subregion)
 
 def format_shows_list(shows):
     formatted_shows = []
@@ -68,7 +64,6 @@ def format_shows_list(shows):
 def check_reminders(bms, reminder):
     try:
         event_code = bms.get_event_code(reminder.name, reminder.language, dimension=reminder.dimension)
-        # movie_url = bms.get_movie_url(reminder.name, reminder.language, reminder.date, dimension=reminder.dimension)
         active_theaters = TheaterLink.objects.filter(reminder=reminder, found=False)
         theaters = [link.theater for link in active_theaters]
         showtimes = bms.get_showtimes_by_venue(event_code, theaters, reminder.date)
@@ -88,7 +83,6 @@ def check_reminders(bms, reminder):
                         'reminder': reminder,
                         'formatted_date': formatted_date,
                         'shows': formatted_shows,
-                        # 'movie_url': movie_url,
                         },
         )
 
@@ -100,10 +94,7 @@ def check_reminders(bms, reminder):
         logger.info("Check mail?")
 
         for theater in theaters_found:
-            t = TheaterLink.objects.get(reminder=reminder, theater=theater)
-            t.found = True
-            t.found_at = timezone.localtime()
-            t.save()
+            TheaterLink.objects.filter(reminder=reminder, theater=theater).update(found=True, found_at=timezone.localtime())
 
         if TheaterLink.objects.filter(reminder=reminder, found=False).count() == 0:
             reminder.completed = True

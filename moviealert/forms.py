@@ -2,7 +2,9 @@ from datetime import date, timedelta
 
 from django.utils.translation import gettext_lazy as _
 from django import forms
+from django.conf import settings
 from django_select2.forms import Select2MultipleWidget
+
 
 from .models import Reminder, Theater
 
@@ -15,7 +17,7 @@ class ReminderForm(forms.ModelForm):
         }
         widgets = {
             'date': forms.DateInput(attrs={'type':'date'}),
-            'theaters': Select2MultipleWidget({'data-maximum-selection-length': 5}),
+            'theaters': Select2MultipleWidget({'data-maximum-selection-length': settings.MAX_THEATERS}),
         }
     
     def __init__(self, *args, **kwargs):
