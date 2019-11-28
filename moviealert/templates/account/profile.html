@@ -31,29 +31,34 @@
             </form>
         </div>
     </div>
+    <div class="row justify-content-center">
         {% if reminders|length > 0 %}
-        <div class="row justify-content-center">
         <div class="col-sm-6">
-            <p class="lead">Your reminders:</p>
-        </div>
-        </div>
-            {% for reminder in reminders %}
-            <div class="row justify-content-center">
-            <div class="col-sm-6">
-            <p class="lead">
-                <a href={% url 'edit_reminder' reminder.id %}>{{ reminder.name }} ({{ reminder.date }})</a>
-            </p>
+        <div class="card">
+            <div class="card-header">
+                Your reminders
             </div>
+            <ul class="list-group list-group-flush">
+                {% for reminder in reminders %}
+                    {% if reminder.dropped %}
+                    <li class="list-group-item text-danger">{{ reminder.name }} ({{ reminder.date }})</li>
+                    {% elif reminder.completed %}
+                    <li class="list-group-item text-success">{{ reminder.name }} ({{ reminder.date }})</li>
+                    {% else %}
+                    <li class="list-group-item"><a href={% url 'edit_reminder' reminder.id %}>{{ reminder.name }} ({{ reminder.date }})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
         </div>
-        {% endfor %}
+        </div>
         {% else %}
-        <div class="row justify-content-center">
         <div class="col-sm-6">
             <p class="lead">You have no reminders added. <a href={% url 'reminder_view' %}>Try adding one</a></p>
         </div>
-    </div>
         {% endif %}
-
+    </div>
+        
+</div>
 {{ form.media.js }}
 
 {% endblock %}
