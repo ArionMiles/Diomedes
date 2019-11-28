@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Donate</h1>
+        <p class="lead">Your kind donations will incentivize me to work on diomedes and cover part of hosting charges.</p>
+        <hr class="my-4">
+        <p>
+            Diomedes is a side project and I've learnt a great deal about web development through it. However, keeping
+            this website online requires paying server hosting costs, parts of which could be covered by donations from users
+            like you.
+        </p>
+        <p>
+            Donations are currently only accepted via UPI as I feel it's the most direct and easiest way for both, me and 
+            the users. Users can easily pay via any UPI app installed on their phones and I directly receive the money.
+        </p>
+        <p>
+            If diomedes has ever helped you book your favorite seats in your favorite theaters, you may consider 
+            donating to help me cover the server costs as I keep working to improve the site and user experience.
+        </p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href={{ donate_link }} target="_blank" role="button">Donate</a>
+        </p>
+    </div>
+</div>
+
+{% endblock %}

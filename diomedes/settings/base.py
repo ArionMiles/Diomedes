@@ -248,3 +248,5 @@ CELERY_BEAT_SCHEDULE = {
 BMS_TOKEN = env("BMS_TOKEN")
 
 MAX_THEATERS = 5 # Maximum theaters a user can select
+
+DONATE_LINK = env('DONATE_LINK')

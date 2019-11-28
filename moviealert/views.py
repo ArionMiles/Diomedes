@@ -111,3 +111,11 @@ class TrendingView(LoginRequiredMixin, RegionExistsMixin, TemplateView):
         trends = BMS.get_trending(self.request.user.profile.region.code, settings.BMS_TOKEN)
         context['trending'] = trends
         return context
+
+class DonateView(TemplateView):
+    template_name = 'donate.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['donate_link'] = settings.DONATE_LINK
+        return context
