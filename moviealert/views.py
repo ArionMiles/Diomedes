@@ -27,7 +27,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProfileView, self).get_context_data(*args, **kwargs)
-        context['reminders'] = Reminder.objects.filter(user=self.request.user).order_by('date')
+        context['reminders'] = Reminder.objects.filter(user=self.request.user).order_by('-date')
         return context
 
 class RegionExistsMixin(UserPassesTestMixin):
@@ -110,4 +110,12 @@ class TrendingView(LoginRequiredMixin, RegionExistsMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         trends = BMS.get_trending(self.request.user.profile.region.code, settings.BMS_TOKEN)
         context['trending'] = trends
+        return context
+
+class DonateView(TemplateView):
+    template_name = 'donate.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['donate_link'] = settings.DONATE_LINK
         return context

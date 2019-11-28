@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="container">
+        <div class="d-flex justify-content-center pt-4 pb-4">
+        <div id="accordion" class="col-sm-8">
+                <div class="card">
+                  <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                      <button class="btn btn-link text-wrap" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        How is this different from BookMyShow?
+                      </button>
+                    </h5>
+                  </div>
+              
+                  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                      The BookMyShow (BMS) reminders are not real time. The notifications may be delayed since BMS sends out notifications once enough theaters have opened up their bookings for a movie (This is a guess since even I'm not sure :P).
+                      The theaters can choose to open the bookings for any movie at their own convenience and there is a very slim chance that two theaters open their bookings at the same time.
+                      
+                      Diomedes monitors each and individual theaters you specify periodically and as and when they open their bookings, it sends out an email containing showtimes for the movie at that theater.
+                      You can directly book a particular show by clicking the respective showtime link.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Why can't I select more than 5 theaters?
+                      </button>
+                    </h5>
+                  </div>
+                  <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                      This is done purposely since if everyone is allowed unlimited theater choices, we'd be flooding BookMyShow with unnecessary requests.
+                      Generally, a single user may have around 5 theaters of their choice in their locality, so I've kept it at 5.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingSix">
+                    <h5 class="mb-0">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                        I didn't get an email notification!
+                      </button>
+                    </h5>
+                  </div>
+                  <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
+                    <div class="card-body">
+                      Check your spam folder?
+                      Or maybe the theater didn't open shows for the movie at all. It may happen sometimes that the format/language you selected wasn't shown by the theater that you selected.
+                      Make sure before setting the reminder that the theater you select will show the movie in the specified format/language or the application will not be able to match it on BookMyShow.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        I'd like a feature!
+                      </button>
+                    </h5>
+                  </div>
+                  <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                      You can <a href="https://github.com/ArionMiles/Diomedes/issues">create an issue</a> 
+                      on the project's GitHub page detailing your idea for the feature and get a discussion going.
+                      If you know programming, you could even take it upon yourself to implement it and send me a PR!
+                      Though, do create an issue before sending the PR.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingFour">
+                    <h5 class="mb-0">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        I'd like to donate!
+                      </button>
+                    </h5>
+                  </div>
+                  <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                    <div class="card-body">
+                    If you like what I'm doing, you can <a href={% url 'donate' %}>donate some money</a>. Donations help me by paying for server bills 
+                    and incentivize me to keep working on this project!
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingFive">
+                    <h5 class="mb-0">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        How did you make this site?
+                      </button>
+                    </h5>
+                  </div>
+                  <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                    <div class="card-body">
+                      This website is programmed using the Django web development framework. 
+                      The code is open source and you can find the link to the GitHub Repository in the footer. 
+                      It's hosted on a Google Cloud Platform Compute Instance.
+                    </div>
+                  </div>
+                </div>
+                
+          </div>
+            </div>
+</div>
+{% endblock %}

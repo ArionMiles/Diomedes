@@ -13,7 +13,9 @@ logger = get_task_logger(__name__)
 
 @app.task
 def check_reminders_job():
-    # Drop reminders with date lt today
+    # Mark reminders with at least one theater found AND date lt today as complete
+    Reminder.objects.filter(theaterlink__found=True, date__lt=timezone.localdate(), completed=False, dropped=False).update(completed=True)
+    # Drop reminders with date lt today (these have no theaters found)
     Reminder.objects.filter(completed=False, dropped=False, date__lt=timezone.localdate()).update(dropped=True)
     # Search for all movies which have movie date set to today or sometime in the future.
     pending_reminders = Reminder.objects.filter(completed=False, dropped=False, date__gte=timezone.localdate())
