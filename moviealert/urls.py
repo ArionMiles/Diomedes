@@ -13,4 +13,5 @@ urlpatterns = [
     path(r'edit-reminder/<int:id>', ReminderEditView.as_view(), name='edit_reminder'),
     path(r'ajax/movies', cache_page(60*15)(AjaxMovieListView.as_view()), name='ajax_movies'),
     path(r'trending', cache_page(60*15)(TrendingView.as_view()), name='trends'),
+    path(r'faq', TemplateView.as_view(template_name='faq.html'), name='faq'),
 ]
