@@ -27,7 +27,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProfileView, self).get_context_data(*args, **kwargs)
-        context['reminders'] = Reminder.objects.filter(user=self.request.user).order_by('date')
+        context['reminders'] = Reminder.objects.filter(user=self.request.user).order_by('-date')
         return context
 
 class RegionExistsMixin(UserPassesTestMixin):
